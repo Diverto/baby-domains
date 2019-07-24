@@ -12,8 +12,13 @@
     "*.js": [
       "eslint --fix",
       "git add",
-      "jest --bail --findRelatedTests"
+      "cross-env NODE_ENV=test jest --bail --findRelatedTests"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "repository": {
     "type": "git",
@@ -26,7 +31,9 @@
   },
   "homepage": "https://github.com/Diverto/baby-domains#readme",
   "devDependencies": {
+    "cross-env": "^5.2.0",
     "eslint": "^6.1.0",
+    "husky": "^3.0.1",
     "jest": "^24.8.0",
     "lint-staged": "^9.2.0",
     "mongodb": "^3.3.0-beta2",
