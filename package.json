@@ -6,13 +6,14 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "test": "jest --bail"
   },
   "lint-staged": {
     "*.js": [
       "eslint --fix",
       "git add",
-      "cross-env NODE_ENV=test jest --bail --findRelatedTests"
+      "jest --bail --findRelatedTests"
     ]
   },
   "husky": {
