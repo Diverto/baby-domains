@@ -1,0 +1,40 @@
+{
+  "name": "baby-domains",
+  "version": "1.0.0",
+  "description": "Scrapes baby domains from DomainDS",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add",
+      "jest --bail --findRelatedTests"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Diverto/baby-domains.git"
+  },
+  "author": "",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Diverto/baby-domains/issues"
+  },
+  "homepage": "https://github.com/Diverto/baby-domains#readme",
+  "devDependencies": {
+    "eslint": "^6.1.0",
+    "jest": "^24.8.0",
+    "lint-staged": "^9.2.0",
+    "mongodb": "^3.3.0-beta2",
+    "nodemon": "^1.19.1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.6.6",
+    "validator": "^11.1.0"
+  }
+}
