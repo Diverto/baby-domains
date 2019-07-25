@@ -6,6 +6,7 @@ before_install:
   - docker build -t tandrosdiv/baby-api -f ./server/Dockerfile.dev ./server
 
 script:
+  # regression test
   - docker run -e CI=true tandrosdiv/baby-api npm run test
 
 after_success:
