@@ -14,4 +14,4 @@ after_success:
   # Log in to Docker CLI, TC
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # push to Docker Hub
-  - docker push tandrosdiv/baby-div
+  - docker push tandrosdiv/baby-api
