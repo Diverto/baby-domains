@@ -3,6 +3,6 @@ const Domain = require('../models/domains')
 
 const router = new express.Router()
 
-router.get('/domains/all', (_req,_res) => {
+router.get('/domains/all', () => {
 
 })
