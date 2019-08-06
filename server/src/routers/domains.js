@@ -3,7 +3,7 @@ const express = require('express')
 
 const router = new express.Router()
 
-// blank for now
+// blank for now right ?
 router.get('/domains/all', () => {
 
 })
