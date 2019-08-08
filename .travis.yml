@@ -11,7 +11,7 @@ script:
 
 after_success:
   - docker build -t tandrosdiv/baby-api ./server
-  # Log in to Docker CLI
-  echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Log in to Docker CLI, TC
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # push to Docker Hub
-  docker push tandrosdiv/baby-div
+  - docker push tandrosdiv/baby-api
