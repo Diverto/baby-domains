@@ -2,8 +2,7 @@ const mongoose = require('mongoose')
 
 const keys = require('../keys')
 
-const uri = `mongodb+srv://${keys.mongoUser}:${keys.mongoPassword}@
-cluster0-1wfrf.gcp.mongodb.net/baby-domains?retryWrites=true&w=majority`
+const uri = keys.mongoUri
 
 mongoose.connect(uri, {
     useNewUrlParser: true,
