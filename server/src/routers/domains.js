@@ -7,3 +7,5 @@ const router = new express.Router()
 router.get('/domains/all', () => {
 
 })
+
+module.exports = router
