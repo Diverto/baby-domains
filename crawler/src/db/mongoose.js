@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const keys = require('../keys')
 
-const mongoConnect = async function () {
+exports.mongoConnect = async function () {
     try {
         let uri = ''
         if (keys.mongoProtocol === 'mongodb') {
@@ -11,7 +11,6 @@ const mongoConnect = async function () {
         `${keys.mongoHost}/${keys.mongoDatabase}?retryWrites=true&w=majority`
         }
         
-        console.log(uri)
         await mongoose.connect(uri, {
             useNewUrlParser: true,
             useCreateIndex: true,
@@ -22,5 +21,3 @@ const mongoConnect = async function () {
         console.log(`DB error: ${e}`)
     }
 }
-
-module.exports = mongoConnect
