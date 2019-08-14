@@ -4,5 +4,6 @@ module.exports = {
     mongoDatabase: process.env.MONGODATABASE,
     mongoPassword: process.env.MONGOPASSWORD,
     mongoPort: process.env.MONGOPORT,
-    mongoProtocol: process.env.MONGOPROTOCOL
+    mongoProtocol: process.env.MONGOPROTOCOL,
+    nodeEnv: process.env.NODE_ENV
   };

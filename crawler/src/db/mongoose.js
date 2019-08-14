@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
 const keys = require('../keys')
 
+const logger = keys.nodeEnv === 'development' ? 
+    require('../logger_dev').logger : require('../logger_prod').logger 
+
 exports.mongoConnect = async function () {
     try {
         let uri = ''
@@ -16,8 +19,8 @@ exports.mongoConnect = async function () {
             useCreateIndex: true,
             useFindAndModify:false
         })
-        console.log('Connected to mongodb')
+        logger.info('Connected to mongodb')
     } catch (e) {
-        console.log(`DB error: ${e}`)
+        logger.error(`DB error: ${e}`)
     }
 }
