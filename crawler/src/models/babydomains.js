@@ -6,16 +6,25 @@ const babyDomainSchema = mongoose.Schema({
         type: String,
         required: true, 
         trim: true,
+        index: true,
         validate(value) {
             if(!validator.isFQDN(value)) {
                 throw new Error('Domain is not valid')
             }
         } 
+    },
+    dateRegistered: {
+        type: Date,
+        required: true,
+        index: true,
+        validate(value) {
+            if(!validator.isISO8601(value)) {
+                throw new Error('String is not a date')
+            }
+        }
     }
 }, {
     timestamps: true
 })
 
-const BabyDomain = mongoose.model('BabyDomain', babyDomainSchema)
-
-module.exports = BabyDomain
+exports.BabyDomain = mongoose.model('BabyDomain', babyDomainSchema)

@@ -2,6 +2,7 @@
  * @module crawler
  */
 const mongoConnect = require('./db/mongoose').mongoConnect
+const mongoClose = require('./db/mongoose').mongoClose
 const getHtml = require('./scraper').getHtml
 const saveHtmlToFile = require('./scraper').saveHtmlToFile
 const fetchZippedDomainFile = require('./scraper').fetchZippedDomainFile
@@ -15,12 +16,24 @@ const logger = keys.nodeEnv === 'development' ?
 // ESLint-happy IIFE
 !async function main() {
     try {
-        await mongoConnect()
+        const { dbError, db } = await mongoConnect()
+        if (dbError) {
+            throw new Error(dbError)
+        }
+        const { parseError, html } = await getHtml('http://whoisds.com/newly-registered-domains')
+        if (parseError) {
+            throw new Error(parseError)
+        }
+        saveHtmlToFile(html)
+        const { zippedDomainError, writePath, dateRegistered } = await fetchZippedDomainFile(html)
+        if(zippedDomainError) {
+            throw new Error (zippedDomainError)
+        }
+        console.log(`Writepath: ${writePath} | Date registered: ${dateRegistered}`)
+        await mongoClose(db)
+        return
     } catch (e) {
-        logger.error(`Couldn't connect to database: ${e}`)
+        logger.error(`Function main: ${e}`)
+        return
     }
-    const html = await getHtml('http://whoisds.com/newly-registered-domains')
-    saveHtmlToFile(html)
-    fetchZippedDomainFile(html)
-
 }()

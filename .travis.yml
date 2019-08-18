@@ -4,14 +4,19 @@ services:
 
 before_install:
   - docker build -t tandrosdiv/baby-api -f ./server/Dockerfile.dev ./server
+  - docker build -t tandrosdiv/baby-crawler -f ./crawler/Dockerfile.dev ./crawler
 
 script:
   # regression test
   - docker run -e CI=true tandrosdiv/baby-api npm run test
+  - docker run -e CI=true tandrosdiv/baby-crawler npm run prodtest
+  - docker run -e CI=true tandrosdiv/baby-crawler npm run coveralls
 
 after_success:
   - docker build -t tandrosdiv/baby-api ./server
+  - docker build -t tandrosdiv/baby-crawler ./crawler
   # Log in to Docker CLI, TC
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # push to Docker Hub
   - docker push tandrosdiv/baby-api
+  - docker push tandrosdiv/baby-crawler

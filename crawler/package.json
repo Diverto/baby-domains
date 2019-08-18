@@ -10,7 +10,9 @@
     "start": "node src/index.js",
     "dev": "env-cmd -f .env.local node src/index.js",
     "lint-staged": "lint-staged",
-    "test": "env-cmd -f .env.local jest "
+    "devtest": "env-cmd -f .env.local jest ",
+    "coveralls": "jest --coverage && cat ./tests/coverage/lcov.info | coveralls",
+    "prodtest": "jest --bail"
   },
   "lint-staged": {
     "*.js": [
@@ -40,6 +42,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "coveralls": "^3.0.6",
     "cross-env": "^5.2.0",
     "eslint": "^6.1.0",
     "husky": "^3.0.3",

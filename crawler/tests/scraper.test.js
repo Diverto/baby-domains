@@ -40,29 +40,27 @@ afterEach(() => {
 describe('Tests getHtml responsible for retrieving html file', () => {
     
     test('should correctly retrieve html file', async () => {
-        const html = await getHtml('http://whoisds.com/newly-registered-domains')
+        const { html } = await getHtml('http://whoisds.com/newly-registered-domains')
         expect(isHtml(html)).toBe(true)
     })
     test('should throw exception and return empty string if URL is not HTML file', async () => {
-        const html = await getHtml('https://jsonplaceholder.typicode.com/posts')
-        expect(logger.error.mock.calls[0][0]).toMatch(/wrong type/)
-        expect(logger.error).toHaveBeenCalledTimes(1);
-        expect(html).toHaveLength(0)
-        expect(isHtml(html)).toBe(false)
+        const { parseError, html } = await getHtml('https://jsonplaceholder.typicode.com/posts')
+        console.log(`Parse error: ${parseError}`)
+        expect(`${parseError}`).toMatch(/wrong type/)
+        expect(html).toBeUndefined()
+        expect(Object.prototype.toString.call(parseError)).toBe('[object Error]') 
     })
     test('should throw exception and return empty string if arg is not URL', async () => {
-        const html = await getHtml('httx:/whoisds.com/newly-registered-domains')
-        expect(logger.error.mock.calls[0][0]).toMatch(/not valid/)
-        expect(logger.error).toHaveBeenCalledTimes(1);
-        expect(html).toHaveLength(0)
-        expect(isHtml(html)).toBe(false)
+        const { parseError, html } = await getHtml('httx:/whoisds.com/newly-registered-domains')
+        expect(`${parseError}`).toMatch(/not valid/)
+        expect(html).toBeUndefined()
+        expect(Object.prototype.toString.call(parseError)).toBe('[object Error]') 
     })
     test('should throw exception and return empty string if arg is not URL', async () => {
-        const html = await getHtml('httx:/whoisds.com/newly-registered-domains')
-        expect(logger.error.mock.calls[0][0]).toMatch(/not valid/)
-        expect(logger.error).toHaveBeenCalledTimes(1);
-        expect(html).toHaveLength(0)
-        expect(isHtml(html)).toBe(false)
+        const { parseError, html } = await getHtml('httx:/whoisds.com/newly-registered-domains')
+        expect(`${parseError}`).toMatch(/not valid/)
+        expect(html).toBeUndefined()
+        expect(Object.prototype.toString.call(parseError)).toBe('[object Error]') 
     })
 })
 
