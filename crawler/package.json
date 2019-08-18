@@ -12,7 +12,7 @@
     "lint-staged": "lint-staged",
     "test:dev": "env-cmd -f .env.local jest ",
     "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
-    "test:codecov": "jest --coverage --coverageReporters=text-lcov",
+    "test:codecov": "jest --coverage --coverageReporters=text-lcov | ./node_modules/.bin/codecov --pipe",
     "test:prod": "jest --bail"
   },
   "lint-staged": {
