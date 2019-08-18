@@ -10,9 +10,10 @@
     "start": "node src/index.js",
     "dev": "env-cmd -f .env.local node src/index.js",
     "lint-staged": "lint-staged",
-    "devtest": "env-cmd -f .env.local jest ",
-    "coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
-    "prodtest": "jest --bail"
+    "test:dev": "env-cmd -f .env.local jest ",
+    "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
+    "test:codecov": "jest --coverage --coverageReporters=text-lcov",
+    "test:prod": "jest --bail"
   },
   "lint-staged": {
     "*.js": [
@@ -42,6 +43,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "codecov": "^3.5.0",
     "coveralls": "^3.0.6",
     "cross-env": "^5.2.0",
     "eslint": "^6.1.0",

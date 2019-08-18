@@ -9,10 +9,11 @@ before_install:
 script:
   # regression test
   - docker run -e CI=true tandrosdiv/baby-api npm run test
-  - docker run -e CI=true tandrosdiv/baby-crawler npm run prodtest
-  - docker run -e CI=true tandrosdiv/baby-crawler npm run coveralls
+  - docker run -e CI=true tandrosdiv/baby-crawler npm run test:prod
+  - docker run -e CI=true tandrosdiv/baby-crawler npm run test:codecov
 
 after_success:
+  - bash <(curl -s https://codecov.io/bash)
   - docker build -t tandrosdiv/baby-api ./server
   - docker build -t tandrosdiv/baby-crawler ./crawler
   # Log in to Docker CLI, TC
