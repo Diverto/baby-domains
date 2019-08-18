@@ -1,0 +1,53 @@
+{
+  "name": "crawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "env-cmd -f .env.local node src/index.js",
+    "lint-staged": "lint-staged",
+    "devtest": "env-cmd -f .env.local jest ",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
+    "prodtest": "jest --bail"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add",
+      "env-cmd -f .env.local jest --bail --findRelatedTests"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/logging-winston": "^1.1.1",
+    "cheerio": "^1.0.0-rc.3",
+    "env-cmd": "^9.0.3",
+    "esm": "^3.2.25",
+    "is-html": "^2.0.0",
+    "mongoose": "^5.6.9",
+    "request-promise": "^4.2.4",
+    "rewire": "^4.0.1",
+    "validator": "^11.1.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.6",
+    "cross-env": "^5.2.0",
+    "eslint": "^6.1.0",
+    "husky": "^3.0.3",
+    "jest": "^24.8.0",
+    "lint-staged": "^9.2.1",
+    "nodemon": "^1.19.1"
+  }
+}
