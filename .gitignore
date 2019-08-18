@@ -63,8 +63,6 @@ typings/
 
 tags
 
-# test html's
-test.html
 
 # ignore data folders
 data/
