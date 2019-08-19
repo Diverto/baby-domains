@@ -11,8 +11,8 @@ script:
   - docker run -e CI=true tandrosdiv/baby-api npm run test
   - docker run -e CI=true tandrosdiv/baby-crawler npm run test:prod
   # - docker run -e CI=true tandrosdiv/baby-crawler npm run test:codecov
-  - ci_env=`bash <(curl -s https://codecov.io/env)`
-  - ci_post_cov=`bash <(curl -s https://codecov.io/bash)`
+  - ci_env="bash <(curl -s https://codecov.io/env)"
+  - ci_post_cov="bash <(curl -s https://codecov.io/bash)"
   - docker run -e CI=true tandrosdiv/baby-crawler /bin/bash -c "$ci_env && npm run test:codecov && $ci_post_cov"
 
 after_success:
