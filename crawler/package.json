@@ -14,7 +14,7 @@
     "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "test:codecov": "jest --coverage",
     "test:prod": "jest --bail",
-    "test:snyk": "snyk test",
+    "snyk:test": "snyk test",
     "snyk:monitor": "snyk monitor"
   },
   "lint-staged": {
