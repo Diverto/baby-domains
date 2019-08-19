@@ -2,8 +2,6 @@ FROM node:latest
 
 WORKDIR /app
 
-RUN apk add git
-
 COPY package.json .
 RUN npm install
 
