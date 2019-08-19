@@ -2,7 +2,7 @@ FROM node:alpine
 
 WORKDIR /app
 
-RUN apt add git
+RUN apk add git
 
 COPY package.json .
 RUN npm install
