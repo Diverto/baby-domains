@@ -10,7 +10,6 @@ RUN apt-get install -y mercurial
 COPY package.json .
 RUN npm install
 
-COPY ../.git .
 COPY . .
 
 CMD ["npm", "run", "start"]
