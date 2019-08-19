@@ -5,6 +5,7 @@ WORKDIR /app
 RUN apk add bash
 RUN apk add git
 RUN apk add curl
+RUN apk add hg
 
 COPY package.json .
 RUN npm install

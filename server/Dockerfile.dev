@@ -1,9 +1,11 @@
-FROM node:alpine
+FROM node:lts-buster-slim
 
 WORKDIR /app
 
-RUN apk add --no-cache bash
-RUN apk add --no-cache git
+RUN apt-get install bash
+RUN apt-get install git
+RUN apt-get install curl
+RUN apt-get install hg
 
 COPY package.json .
 RUN npm install
