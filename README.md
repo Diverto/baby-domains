@@ -2,7 +2,7 @@
 [![codecov](https://codecov.io/gh/Diverto/baby-domains/branch/master/graph/badge.svg)](https://codecov.io/gh/Diverto/baby-domains)
 [![Build Status](https://travis-ci.org/Diverto/baby-domains.svg?branch=master)](https://travis-ci.org/Diverto/baby-domains)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c26b3d47eaa319e9e290/maintainability)](https://codeclimate.com/github/Diverto/baby-domains/maintainability)
-[![Known Vulnerabilities - crawler](https://snyk.io//test/github/Diverto/baby-domains/badge.svg?targetFile=crawler/package.json)](https://snyk.io//test/github/Diverto/baby-domains?targetFile=crawler/package.json)
+[![Known Vulnerabilities - Crawler](https://snyk.io//test/github/Diverto/baby-domains/badge.svg?targetFile=crawler/package.json)](https://snyk.io//test/github/Diverto/baby-domains?targetFile=crawler/package.json)
     
 # baby-domains
 
