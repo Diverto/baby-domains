@@ -1,6 +1,9 @@
-FROM node:latest
+FROM node:alpine
 
 WORKDIR /app
+
+apk add --no-cache bash
+apk add --no-cache git
 
 COPY package.json .
 RUN npm install
