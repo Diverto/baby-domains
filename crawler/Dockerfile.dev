@@ -2,9 +2,9 @@ FROM node:alpine
 
 WORKDIR /app
 
-RUN apk add --no-cache bash
-RUN apk add --no-cache git
-RUN apk add --no-cache curl
+RUN apk add bash
+RUN apk add git
+RUN apk add curl
 
 COPY package.json .
 RUN npm install
