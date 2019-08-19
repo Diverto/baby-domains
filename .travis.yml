@@ -9,8 +9,15 @@ before_install:
 script:
   # regression test
   - docker run -e CI=true tandrosdiv/baby-api npm run test
-  - docker run -e CI=true tandrosdiv/baby-crawler npm run prodtest
-  - docker run -e CI=true tandrosdiv/baby-crawler npm run coveralls
+  - docker run -e CI=true tandrosdiv/baby-crawler npm run test:prod
+  # - docker run -e CI=true tandrosdiv/baby-crawler npm run test:codecov
+  - ci_env="bash <(curl -s https://codecov.io/env)"
+  - ci_post_cov="bash <(curl -s https://codecov.io/bash)"
+  - >
+    docker run -e CI=true -v "$PWD/coverage:/app/coverage" tandrosdiv/baby-crawler 
+    /bin/bash -c "npm run test:codecov"
+  - bash <(curl -s https://codecov.io/env)
+  - bash <(curl -s https://codecov.io/bash) 
 
 after_success:
   - docker build -t tandrosdiv/baby-api ./server

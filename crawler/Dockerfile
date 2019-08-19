@@ -1,6 +1,11 @@
-FROM node:alpine
+FROM node:lts-buster-slim
 
 WORKDIR /app
+
+RUN apt-get update
+RUN apt-get install -y git
+RUN apt-get install -y curl
+RUN apt-get install -y mercurial
 
 COPY package.json .
 RUN npm install
