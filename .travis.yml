@@ -10,7 +10,7 @@ script:
   # regression test
   - docker run -e CI=true tandrosdiv/baby-api npm run test
   - docker run -e CI=true tandrosdiv/baby-crawler npm run test:prod
-  # - docker run -e CI=true tandrosdiv/baby-crawler snyk auth "$SNYK_TOKEN" 
+  # - docker run -e CI=true tandrosdiv/baby-crawler /app/node_modules/.bin/snyk auth "$SNYK_TOKEN" 
   # - docker run -e CI=true tandrosdiv/baby-crawler npm run snyk:test
   - >
     docker run -e CI=true -v "$PWD/coverage:/app/coverage" tandrosdiv/baby-crawler 
