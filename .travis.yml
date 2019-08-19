@@ -12,8 +12,8 @@ script:
   - docker run -e CI=true tandrosdiv/baby-crawler npm run test:prod
   # - docker run -e CI=true tandrosdiv/baby-crawler npm run test:codecov
   - ci_env=`bash <(curl -s https://codecov.io/env)`
-  - ci_post_cov="bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN"
-  - docker run -e CI=true tandrosdiv/baby-crawler $(bash <(curl -s https://codecov.io/env)) -c "apk update && apk add git && npm run test:codecov && $ci_post_cov"
+  - ci_post_cov="bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN"rm 
+  - docker run --rm $(bash <(curl -s https://codecov.io/env)) tandrosdiv/baby-crawler  -c "apk update && apk add git && npm run test:codecov && $ci_post_cov"
 
 after_success:
   - docker build -t tandrosdiv/baby-api ./server
