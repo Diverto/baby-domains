@@ -16,24 +16,17 @@ const logger = keys.nodeEnv === 'development' ?
 // ESLint-happy IIFE
 !async function main() {
     try {
-        const { dbError, db } = await mongoConnect()
-        if (dbError) {
-            throw new Error(dbError)
-        }
-        const { parseError, html } = await getHtml('http://whoisds.com/newly-registered-domains')
-        if (parseError) {
-            throw new Error(parseError)
-        }
+        const db = await mongoConnect()
+        const html  = await getHtml('http://whoisds.com/newly-registered-domains')
         saveHtmlToFile(html)
-        const { zippedDomainError, writePath, dateRegistered } = await fetchZippedDomainFile(html)
-        if(zippedDomainError) {
-            throw new Error (zippedDomainError)
-        }
-        console.log(`Writepath: ${writePath} | Date registered: ${dateRegistered}`)
+        const { writePathZip, dateRegistered } = await fetchZippedDomainFile(html)
+        
+        console.log(`Writepath: ${writePathZip} | Date registered: ${dateRegistered}`)
         await mongoClose(db)
         return
     } catch (e) {
-        logger.error(`Function main: ${e}`)
+        const error = `${e}`.replace(/^Error:/, '>')
+        logger.error(`* main: ${error}`)
         return
     }
 }()

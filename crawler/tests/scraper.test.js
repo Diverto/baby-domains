@@ -11,8 +11,9 @@ const logger = require('../src/logger_dev').logger
 const scraperRewire = rewire('../src/scraper')
 const domainRegisteredDate = scraperRewire.__get__('domainRegisteredDate')
 const obtainDownloadUrl = scraperRewire.__get__('obtainDownloadUrl')
+const writeDomainsZippedFile = scraperRewire.__get__('writeDomainsZippedFile')
 // const writeDomainsZippedFile = scraperRewire.__get__('writeDomainsZippedFile')
-const logMock = jest.fn((...args) => { console.log(`Args are: ${args}`) })
+// const logMock = jest.fn((...args) => { console.log(`Args are: ${args}`) })
 
 
 
@@ -28,87 +29,105 @@ beforeAll(() => {
 beforeEach(() => {
         jest.spyOn(logger, 'error').mockImplementation(() => {})
         jest.spyOn(logger, 'debug').mockImplementation(() => {})
-        scraperRewire.__set__('logger', { error: logMock })
+        // scraperRewire.__set__('logger', { error: logMock })
         
     })
 afterEach(() => {
     logger.error.mockRestore()
     logger.debug.mockRestore()
-    logMock.mockRestore()
+    // logMock.mockRestore()
 })
 
 describe('Tests getHtml responsible for retrieving html file', () => {
     
     test('should correctly retrieve html file', async () => {
-        const { html } = await getHtml('http://whoisds.com/newly-registered-domains')
+        const html  = await getHtml('http://whoisds.com/newly-registered-domains')
         expect(isHtml(html)).toBe(true)
     })
-    test('should throw exception and return empty string if URL is not HTML file', async () => {
-        const { parseError, html } = await getHtml('https://jsonplaceholder.typicode.com/posts')
-        console.log(`Parse error: ${parseError}`)
-        expect(`${parseError}`).toMatch(/wrong type/)
-        expect(html).toBeUndefined()
-        expect(Object.prototype.toString.call(parseError)).toBe('[object Error]') 
+    test('should throw exception if URL is not HTML file', async () => {
+        const url = 'https://jsonplaceholder.typicode.com/posts'
+        await expect(getHtml(url)).rejects.toThrowError(/wrong type/)
     })
-    test('should throw exception and return empty string if arg is not URL', async () => {
-        const { parseError, html } = await getHtml('httx:/whoisds.com/newly-registered-domains')
-        expect(`${parseError}`).toMatch(/not valid/)
-        expect(html).toBeUndefined()
-        expect(Object.prototype.toString.call(parseError)).toBe('[object Error]') 
-    })
-    test('should throw exception and return empty string if arg is not URL', async () => {
-        const { parseError, html } = await getHtml('httx:/whoisds.com/newly-registered-domains')
-        expect(`${parseError}`).toMatch(/not valid/)
-        expect(html).toBeUndefined()
-        expect(Object.prototype.toString.call(parseError)).toBe('[object Error]') 
+    test('should throw exception if arg is not URL', async () => {
+        const url = 'httx:/whoisds.com/newly-registered-domains'
+        await expect(getHtml(url)).rejects.toThrowError(/not valid/)
     })
 })
 
 describe('Suit of tests that check date obtaining function', () => {
     test('Should extract date from legit html', () => {
         $ = cheerio.load(html)
-        const { domError, dateRegistered }  = domainRegisteredDate($)
+        const dateRegistered = domainRegisteredDate($)
         expect(Object.prototype.toString.call(dateRegistered)).toBe('[object Date]')
-        expect(domError).toBeUndefined()
     })
     test('Should throw error if given random string', () => {
-        const { domError, dateRegistered } = domainRegisteredDate('random data')
-        expect(logMock).toHaveBeenCalledTimes(1)
-        expect(logMock.mock.calls[0][0]).toMatch(/not a function/)
-        expect(dateRegistered).toBeUndefined()
-        expect(Object.prototype.toString.call(domError)).toBe('[object Error]')
+        function domainReg() {
+            domainRegisteredDate('random data')
+        }
+        expect(domainReg).toThrowError('not a function');
     })
     test('Should return an error if malformed date', () => {
-        $ = cheerio.load(invDateUrlHtml)
-        const { domError, dateRegistered } = domainRegisteredDate($)
-        expect(logMock).toHaveBeenCalledTimes(1)
-        expect(logMock.mock.calls[0][0]).toMatch(/Invalid date format/)
-        expect(dateRegistered).toBeUndefined()
-        expect(Object.prototype.toString.call(domError)).toBe('[object Error]')
+        function domainReg() {
+            $ = cheerio.load(invDateUrlHtml)
+            domainRegisteredDate($)
+        }
+        expect(domainReg).toThrowError(/Invalid date format/)
     })
 })
 
 describe('Suit of tests that check URL obtaining function', () => {
     test('Should return valid string that is URL', () => {
         $ = cheerio.load(html)
-        const { urlError, downloadUrl } = obtainDownloadUrl($)
-        expect(urlError).toBeUndefined()
+        downloadUrl = obtainDownloadUrl($)
         expect(typeof downloadUrl).toBe('string')
         expect(validator.isURL(downloadUrl)).toBe(true)
     })
     test('Should throw error if given random string', () => {
-        const { urlError, downloadUrl } = obtainDownloadUrl('lfjkdsflkdjlksdkfsd')
-        expect(logMock).toHaveBeenCalledTimes(1)
-        expect(logMock.mock.calls[0][0]).toMatch(/not a function/)
-        expect(downloadUrl).toBeUndefined()
-        expect(Object.prototype.toString.call(urlError)).toBe('[object Error]')
+        function downUrl () {
+            obtainDownloadUrl('lfjkdsflkdjlksdkfsd')
+        }
+        expect(downUrl).toThrowError(/not a function/)
     })
     test('Should return an error if malformed URL', () => {
-        $ = cheerio.load(invDateUrlHtml)
-        const { urlError, downloadUrl } = obtainDownloadUrl($)
-        expect(logMock).toHaveBeenCalledTimes(1)
-        expect(logMock.mock.calls[0][0]).toMatch(/cannot parse URL/)
-        expect(downloadUrl).toBeUndefined()
-        expect(Object.prototype.toString.call(urlError)).toBe('[object Error]') 
+        function downUrl () {
+            $ = cheerio.load(invDateUrlHtml)
+            obtainDownloadUrl($)
+        }
+        expect(downUrl).toThrowError(/cannot parse URL/)
     })
+})
+
+describe('Suit of tests that check writing of domains zipped file', () => {
+    test('Should fail if url is not valid', async () => {
+        const options = {
+            url: 'dsaldsajkljdsakl',
+            encoding: null
+        }
+        await expect(writeDomainsZippedFile(options, '2019-01-01'))
+        .rejects.toThrowError(/cannot parse URL/)
+    })
+    test('Should fail if url is not valid', async () => {
+        const options = {
+            url: 'dsaldsajkljdsakl',
+            encoding: null
+        }
+        await expect(writeDomainsZippedFile(options, '2019-01-01'))
+        .rejects.toThrowError(/cannot parse URL/)
+    })
+    test('Should fail if encoding is wrong', async () => {
+        const options = {
+            url: 'https://www.google.com',
+            encoding: 'json'
+        }
+        await expect(writeDomainsZippedFile(options, '2019-01-01'))
+        .rejects.toThrowError(/Request should be a binary stream/)
+    })
+    test('Should fail no encoding is imposed', async () => {
+        const options = {
+            url: 'https://www.google.com',
+        }
+        await expect(writeDomainsZippedFile(options, '2019-01-01'))
+        .rejects.toThrowError(/Request should be a binary stream/)
+    })
+    
 })

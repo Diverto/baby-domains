@@ -14,23 +14,16 @@ exports.mongoConnect = async () => {
             uri = `${keys.mongoProtocol}://${keys.mongoUser}:${keys.mongoPassword}@` +
         `${keys.mongoHost}/${keys.mongoDatabase}?retryWrites=true&w=majority`
         }
-        
         const db = await mongoose.connect(uri, {
             useNewUrlParser: true,
             useCreateIndex: true,
             useFindAndModify:false
         })
         logger.info('Connected to mongodb')
-        return {
-            dbError: undefined,
-            db
-        }
+        return db
     } catch (e) {
-        logger.error(`function mongoConnect: ${e}`)
-        return {
-            dbError: e,
-            db: undefined
-        }
+        const error = `${e}`.replace(/Error:/gi, '>')
+        throw new Error(`* mongoConnect: ${error}`)
     }
 }
 
@@ -39,6 +32,7 @@ exports.mongoClose = async (db) => {
     try {
         await db.disconnect()
     } catch (e) {
-        logger.error(`function mongoClose: ${e}`)
+        const error = `${e}`.replace(/Error:/gi, '>')
+        throw new Error(`* mongoClose: ${error}`)
     }
 }
