@@ -10,7 +10,7 @@ const logger = require('../src/logger_dev').logger
 
 let domainZip
 beforeAll(() => {
-    domainZip = path.join(__dirname, '..', 'data', 'domains-2019-08-16.zip')
+    domainZip = path.join(__dirname, '..', 'testdata', 'domains-2019-08-16.zip')
     jest.mock('fs')
  })
 

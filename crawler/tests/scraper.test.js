@@ -25,6 +25,7 @@ beforeAll(() => {
     html = fs.readFileSync('./tests/test.html')
     invDateUrlHtml = fs.readFileSync('./tests/test_invalid_url_and_date.html')
     malformedHtml = fs.readFileSync('./tests/test_malformed.html')
+    jest.mock('fs')
  })
 beforeEach(() => {
         jest.spyOn(logger, 'error').mockImplementation(() => {})
