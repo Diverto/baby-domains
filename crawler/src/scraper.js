@@ -61,32 +61,34 @@ const obtainDownloadUrl = ($) => {
  * @returns {string} - Path where zipped file was stored
  * Anonymous object with writeError and writePath members
  */
-const writeDomainsZippedFile = async (options, dateRegistered) => {
-    try {
-        if((Object.prototype.toString.call(dateRegistered) !== '[object Date]')
-            && !validator.isISO8601(dateRegistered)) {
-                throw new Error('Invalid date format')
-        }
-        if(!Object.prototype.hasOwnProperty.call(options, 'encoding') 
-            || options.encoding !== null) {
-            throw new Error('Request should be a binary stream') 
-        }
-        if (!validator.isURL(options.url)) {
-            throw new Error('cannot parse URL for downloading')
-        }
-        const writePathZip = path.join(__dirname, '..', 'data', 
-            `domains-${dateRegistered.getFullYear()}` + 
-            `-${('0' + (dateRegistered.getMonth() + 1)).slice(-2)}` + 
-            `-${('0' + dateRegistered.getDate()).slice(-2)}.zip`)
-        const writeStream = fs.createWriteStream(writePathZip)
-        await request.get(options).pipe(writeStream)
-        logger.info(`Zipped file written to: ${writePathZip}`)
-        return writePathZip
-    } catch (e) {
-        const error = `${e}`.replace(/^Error:/, '>')
-        throw new Error(`* writeDomainsZippedFile: ${error}`)
-    }
-    
+const writeDomainsZippedFile = (options, dateRegistered) => {
+        return new Promise((resolve, reject) => {
+            if((Object.prototype.toString.call(dateRegistered) !== '[object Date]')
+                && !validator.isISO8601(dateRegistered)) {
+                    return reject('* writeDomainsZippedFile: Invalid date format')
+            }
+            if(!Object.prototype.hasOwnProperty.call(options, 'encoding') 
+                || options.encoding !== null) {
+                    return reject('* writeDomainsZippedFile: Request should be a binary stream') 
+            }
+            if (!validator.isURL(options.url)) {
+                return reject('* writeDomainsZippedFile: cannot parse URL for downloading')
+            }
+            const writePathZip = path.join(__dirname, '..', 'data', 
+                `domains-${dateRegistered.getFullYear()}` + 
+                `-${('0' + (dateRegistered.getMonth() + 1)).slice(-2)}` + 
+                `-${('0' + dateRegistered.getDate()).slice(-2)}.zip`)
+            const writeStream = fs.createWriteStream(writePathZip)
+            let req = request.get(options).pipe(writeStream)
+            req.on('close', err => {
+                if (err) {
+                    return reject(`* writeDomainsZippedFile: ${err}`)
+                } else {
+                    logger.info(`Zipped file written to: ${writePathZip}`)
+                    resolve(writePathZip)
+                }
+            })   
+        })
 }
 
 /**

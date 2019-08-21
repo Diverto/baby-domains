@@ -104,30 +104,30 @@ describe('Suit of tests that check writing of domains zipped file', () => {
             encoding: null
         }
         await expect(writeDomainsZippedFile(options, '2019-01-01'))
-        .rejects.toThrowError(/cannot parse URL/)
+        .rejects.toEqual('* writeDomainsZippedFile: cannot parse URL for downloading')
     })
-    test('Should fail if url is not valid', async () => {
+    test('Should fail if date is not valid', async () => {
         const options = {
-            url: 'dsaldsajkljdsakl',
+            url: 'https://www.diverto.hr',
             encoding: null
         }
-        await expect(writeDomainsZippedFile(options, '2019-01-01'))
-        .rejects.toThrowError(/cannot parse URL/)
+        await expect(writeDomainsZippedFile(options, '321,3n12312,n'))
+        .rejects.toEqual('* writeDomainsZippedFile: Invalid date format')
     })
     test('Should fail if encoding is wrong', async () => {
         const options = {
-            url: 'https://www.google.com',
+            url: 'https://www.diverto.hr',
             encoding: 'json'
         }
         await expect(writeDomainsZippedFile(options, '2019-01-01'))
-        .rejects.toThrowError(/Request should be a binary stream/)
+        .rejects.toEqual('* writeDomainsZippedFile: Request should be a binary stream')
     })
     test('Should fail no encoding is imposed', async () => {
         const options = {
-            url: 'https://www.google.com',
+            url: 'https://www.diverto.hr',
         }
         await expect(writeDomainsZippedFile(options, '2019-01-01'))
-        .rejects.toThrowError(/Request should be a binary stream/)
+        .rejects.toEqual('* writeDomainsZippedFile: Request should be a binary stream')
     })
     
 })
