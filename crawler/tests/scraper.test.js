@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 const fs = require('fs')
 const path = require('path')
+// const unzipper = require('unzipper')
 const cheerio = require('cheerio')
 const rewire = require('rewire')
 const isHtml = require('is-html')
@@ -21,14 +22,17 @@ const getHtml = scraperRewire.__get__('getHtml')
 let html
 let invDateUrlHtml
 let domainString
+// let domainZip
 // let malformedHtml
 
 beforeAll(() => {
     domainString = path.join(__dirname, '..', 'data', 'domains-2019-08-16')
+    // domainZip = path.join(__dirname, '..', 'testdata', 'domains-2019-08-16.zip')
     html = fs.readFileSync('./tests/test.html')
     invDateUrlHtml = fs.readFileSync('./tests/test_invalid_url_and_date.html')
-    malformedHtml = fs.readFileSync('./tests/test_malformed.html')
-    jest.mock('fs')
+    // malformedHtml = fs.readFileSync('./tests/test_malformed.html')
+    // jest.mock('fs')
+    jest.mock('unzipper')
  })
 beforeEach(() => {
         jest.spyOn(logger, 'error').mockImplementation(() => {})
@@ -159,13 +163,22 @@ describe('Suit of tests that check writing of domains zipped file', () => {
 })
 
 describe('Tests converting zip to text file', () => {
-    test('should correctly retrieve existing zip file', async () => {
-        try {
-            expect(convertZipToTxt(domainZip))
-            expect(fs.createReadStream).toHaveBeenCalled()
-            expect(unzipper.Extract).toHaveBeenCalled()
-        } catch (err) {
-            logger.error(err)
-        }
+    // test('should correctly retrieve existing zip file', async () => {
+    //     await expect(convertZipToTxt(domainZip))
+    //     .resolves.toMatch(/domain-names.txt/)
+    //     // expect(fs.createReadStream).toHaveBeenCalled()
+    //     // expect(unzipper.Extract).toHaveBeenCalled()
+    // })
+    test('should fail if random name instead of path', async () => {
+        await expect(convertZipToTxt('dsadsadsadasd'))
+        .rejects.toMatch(/Path is not a valid filesystem path/)
+    })
+    test('should fail if arg not a string', async () => {
+        await expect(convertZipToTxt(24))
+        .rejects.toMatch(/Argument should be string/)
+    })
+    test('should fail if no args', async () => {
+        await expect(convertZipToTxt())
+        .rejects.toMatch(/Path is not a valid filesystem path/)
     })
 })

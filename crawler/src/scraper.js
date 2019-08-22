@@ -152,8 +152,19 @@ const saveHtmlToFile = (html) => {
  * @returns {Promise} - temporary path of the unzipped txt file if promise is fullfiled
  * Anonymous object with urlError and downloadUrl members
  */
-const convertZipToTxt = (writePathZip) => {
+const convertZipToTxt = (writePathZip = '') => {
     return new Promise((resolve, reject) => {
+        if (typeof writePathZip !== 'string') {
+            return reject('* convertZipToTxt: Argument should be string')
+        }
+        const pathRel = path.relative(
+            path.join(__dirname, '..', 'data'), writePathZip)
+        
+        if ((pathRel.split("/").length - 1 > 3) || 
+            !path.isAbsolute(writePathZip)) {
+                return reject('* convertZipToTxt: Path is not a valid filesystem path')
+        }
+        
         const fileContents = fs.createReadStream(writePathZip)
         let writePathTemp = writePathZip.substring(0, 
             writePathZip.lastIndexOf('/') + 1)
