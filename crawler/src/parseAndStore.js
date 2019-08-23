@@ -1,10 +1,53 @@
-// const fs = require('fs')
-// const validator = require('validator')
-// const cheerio = require('cheerio')
-// const unzipper = require('unzipper')
-// const keys = require('./keys')
-// const dateToFilename = require('./util').dateToFilename
+const createReadStream = require('fs').createReadStream
+const path = require('path')
+const createInterface = require('readline').createInterface
+const BabyDomain = require('./models/babydomains').BabyDomain
+const keys = require('./keys')
+let logger = keys.nodeEnv === 'development' ?
+    require('./logger_dev').logger : require('./logger_prod').logger
 
-exports.arseDomainsAndStore = async ({dateRegistered, dateFilename}) =>  {
-    console.log(dateRegistered, dateFilename)
+/**
+ * function parsing domains from the file and storing them to mongodb
+ * @param {{dateRegistered: Date, dateFilename: string}} 
+ * @returns {string} - Path where zipped file was stored
+ */
+exports.parseDomainsAndStore = 
+    async ({ dateRegistered = new Date('1970-01-01'), dateFilename = '' } = {}) => {
+    try {
+        console.log(dateRegistered, dateFilename)
+        logger.debug('Executing parseDomainsAndStore function')
+    
+        if (dateFilename === '' || dateRegistered === new Date('1970-01-01')) {
+            throw new Error('You cannot omit parameters')
+        }
+        const pathRel = path.relative(
+            path.join(__dirname, '..', 'data'), dateFilename)
+    
+        if ((pathRel.split("/").length - 1 > 3) ||
+            !path.isAbsolute(dateFilename)) {
+            throw new Error('Path is not a valid filesystem path')
+        }
+    
+        const rl = createInterface({
+            input: createReadStream(dateFilename),
+            crlfDelay: Infinity
+        })
+        const start = process.hrtime.bigint();
+        for await (const line of rl) {
+            const domainName = line.trim()
+            const domainEntry = {
+                domainName,
+                dateRegistered
+            }
+            const babyModel = new BabyDomain(domainEntry)
+            await babyModel.save()
+        }
+        const end = process.hrtime.bigint();
+        logger.info(`Process of writing domains to database 
+        took ${(end - start)/1e9} seconds`)
+        logger.info('* parseDomainsAndStore: All entries saved')
+    } catch (e) {
+        const error = `${e}`.replace(/^Error:/gi, '>')
+        throw new Error(`* parseDomainsAndStore: ${error}`)
+    }
 }

@@ -17,11 +17,6 @@ const babyDomainSchema = mongoose.Schema({
         type: Date,
         required: true,
         index: true,
-        validate(value) {
-            if(!validator.isISO8601(value)) {
-                throw new Error('String is not a date')
-            }
-        }
     }
 }, {
     timestamps: true

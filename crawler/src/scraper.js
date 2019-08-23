@@ -137,12 +137,12 @@ const saveHtmlToFile = (html) => {
         if (!isHtml(html)) {
             throw new Error('saveHtmlToFile: URL exists but is wrong type')
         }
-        const writePath = './tests/test.html'
+        const writePath = '../testdata/test.html'
         fs.writeFileSync(writePath, html)
         logger.info(`HTML file written into: ${writePath}`)
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
-        throw new Error(`* fetchStoreZippedDomainFile: ${error}`)
+        throw new Error(`* saveHtmlToFile: ${error}`)
     }
 }
 
