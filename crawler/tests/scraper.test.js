@@ -163,12 +163,6 @@ describe('Suit of tests that check writing of domains zipped file', () => {
 })
 
 describe('Tests converting zip to text file', () => {
-    // test('should correctly retrieve existing zip file', async () => {
-    //     await expect(convertZipToTxt(domainZip))
-    //     .resolves.toMatch(/domain-names.txt/)
-    //     // expect(fs.createReadStream).toHaveBeenCalled()
-    //     // expect(unzipper.Extract).toHaveBeenCalled()
-    // })
     test('should fail if random name instead of path', async () => {
         await expect(convertZipToTxt('dsadsadsadasd'))
         .rejects.toMatch(/Path is not a valid filesystem path/)

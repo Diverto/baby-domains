@@ -4,6 +4,7 @@
 const mongoConnect = require('./db/mongoose').mongoConnect
 const mongoClose = require('./db/mongoose').mongoClose
 const fetchStoreZippedDomainFile = require('./scraper').fetchStoreZippedDomainFile
+const parseDomainsAndStore = require('./parseAndStore').parseDomainsAndStore
 
 const keys = require('./keys')
 // const cheerio = require('cheerio')
@@ -17,7 +18,9 @@ const logger = keys.nodeEnv === 'development' ?
     try {
         const db = await mongoConnect()
         
-        await fetchStoreZippedDomainFile()
+        const { dateRegistered, dateFilename } = await fetchStoreZippedDomainFile()
+
+        await parseDomainsAndStore({dateRegistered, dateFilename})
         
         await mongoClose(db)
         return

@@ -199,7 +199,7 @@ exports.fetchStoreZippedDomainFile = async () => {
         
         const $ = cheerio.load(html)
         const dateRegistered = domainRegisteredDate($)
-        const dateFilename = dateToFilename(dateRegistered)
+        let dateFilename = dateToFilename(dateRegistered)
         const downloadUrl = obtainDownloadUrl($)
         
         const options = {
@@ -208,7 +208,9 @@ exports.fetchStoreZippedDomainFile = async () => {
         }
         const writePathZip = await writeDomainsZippedFile({ options, dateFilename })
         const writePathTemp = await convertZipToTxt(writePathZip)
-        fs.renameSync(writePathTemp, dateFilename + '.txt')
+        dateFilename += '.txt'
+        fs.renameSync(writePathTemp, dateFilename)
+        return { dateRegistered, dateFilename }
         
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
