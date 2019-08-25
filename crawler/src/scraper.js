@@ -1,3 +1,4 @@
+/* eslint-disable require-atomic-updates */
 const fs = require('fs')
 const path = require('path')
 const rp = require('request-promise')
@@ -137,7 +138,7 @@ const saveHtmlToFile = (html) => {
         if (!isHtml(html)) {
             throw new Error('saveHtmlToFile: URL exists but is wrong type')
         }
-        const writePath = '../testdata/test.html'
+        const writePath = path.join(__dirname, '..', 'testdata','test.html')
         fs.writeFileSync(writePath, html)
         logger.info(`HTML file written into: ${writePath}`)
     } catch (e) {
@@ -164,7 +165,7 @@ const convertZipToTxt = (writePathZip = '') => {
             !path.isAbsolute(writePathZip)) {
                 return reject('* convertZipToTxt: Path is not a valid filesystem path')
         }
-        
+        logger.info(`writePath inside convertZipToTxt: ${writePathZip}`)
         const fileContents = fs.createReadStream(writePathZip)
         let writePathTemp = writePathZip.substring(0, 
             writePathZip.lastIndexOf('/') + 1)
@@ -206,7 +207,9 @@ exports.fetchStoreZippedDomainFile = async () => {
             url: downloadUrl,
             encoding: null
         }
+     
         const writePathZip = await writeDomainsZippedFile({ options, dateFilename })
+        logger.info(`writePathZip: ${writePathZip}`)
         const writePathTemp = await convertZipToTxt(writePathZip)
         dateFilename += '.txt'
         fs.renameSync(writePathTemp, dateFilename)

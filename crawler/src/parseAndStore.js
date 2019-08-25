@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const createReadStream = require('fs').createReadStream
 const path = require('path')
 const createInterface = require('readline').createInterface
@@ -32,7 +33,7 @@ exports.parseDomainsAndStore =
             input: createReadStream(dateFilename),
             crlfDelay: Infinity
         })
-        const start = process.hrtime.bigint();
+        const start = process.hrtime.bigint()
         for await (const line of rl) {
             const domainName = line.trim()
             const domainEntry = {
@@ -43,9 +44,11 @@ exports.parseDomainsAndStore =
             await babyModel.save()
         }
         const end = process.hrtime.bigint();
+        const duration = (end - start)/BigInt(1e9)
         logger.info(`Process of writing domains to database 
-        took ${(end - start)/1e9} seconds`)
+        took ${BigInt(duration)} seconds`)
         logger.info('* parseDomainsAndStore: All entries saved')
+        return
     } catch (e) {
         const error = `${e}`.replace(/^Error:/gi, '>')
         throw new Error(`* parseDomainsAndStore: ${error}`)

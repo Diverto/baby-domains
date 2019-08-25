@@ -1,6 +1,7 @@
 /**
  * @module crawler
  */
+var CronJob = require('cron').CronJob
 const mongoConnect = require('./db/mongoose').mongoConnect
 const mongoClose = require('./db/mongoose').mongoClose
 const fetchStoreZippedDomainFile = require('./scraper').fetchStoreZippedDomainFile
@@ -16,14 +17,14 @@ const logger = keys.nodeEnv === 'development' ?
 // ESLint-happy IIFE
 !async function main() {
     try {
-        const db = await mongoConnect()
         
-        const { dateRegistered, dateFilename } = await fetchStoreZippedDomainFile()
 
-        await parseDomainsAndStore({dateRegistered, dateFilename})
-        
-        await mongoClose(db)
-        return
+        new CronJob('0 18 * * *', async function() {
+            const { db } = await mongoConnect()
+            const { dateRegistered, dateFilename } = await fetchStoreZippedDomainFile();
+            await parseDomainsAndStore({dateRegistered, dateFilename})
+            await mongoClose(db)
+          }, null, true, 'Europe/Vienna');
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
         logger.error(`* main: ${error}`)

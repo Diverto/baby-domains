@@ -1,6 +1,8 @@
 // const fs = require('fs')
 const path = require('path')
 // const keys = require('./keys')
+// const logger = keys.nodeEnv === 'development' ? 
+//     require('./logger_dev').logger : require('./logger_prod').logger 
 
 
 
@@ -26,3 +28,7 @@ exports.dateToFilename = (dateRegistered = '') => {
 }
 
 exports.pipe = (...fns) => (x) => fns.reduce((v, f) => f(v), x)
+
+exports.testAgenda = () => {
+    console.log("*****Agenda")
+}

@@ -20,7 +20,7 @@ exports.mongoConnect = async () => {
             useFindAndModify:false
         })
         logger.info('Connected to mongodb')
-        return db
+        return { db }
     } catch (e) {
         const error = `${e}`.replace(/Error:/gi, '>')
         throw new Error(`* mongoConnect: ${error}`)
