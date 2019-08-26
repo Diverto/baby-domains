@@ -7,11 +7,8 @@ const isHtml = require('is-html')
 const validator = require('validator')
 const cheerio = require('cheerio')
 const unzipper = require('unzipper')
-const keys = require('./keys')
 const dateToFilename = require('./util').dateToFilename
-
-let logger = keys.nodeEnv === 'development' ? 
-    require('./logger_dev').logger : require('./logger_prod').logger
+let logger = require('./logger')
 
 /**
  * function for obtaining registered date from 

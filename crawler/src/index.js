@@ -6,13 +6,7 @@ const mongoConnect = require('./db/mongoose').mongoConnect
 const mongoClose = require('./db/mongoose').mongoClose
 const fetchStoreZippedDomainFile = require('./scraper').fetchStoreZippedDomainFile
 const parseDomainsAndStore = require('./parseAndStore').parseDomainsAndStore
-
-const keys = require('./keys')
-// const cheerio = require('cheerio')
-// const BabyDomain = require('./models/babydomains')
-const logger = keys.nodeEnv === 'development' ? 
-    require('./logger_dev').logger : require('./logger_prod').logger 
-
+const logger = require('./logger')
 
 // ESLint-happy IIFE
 !async function main() {

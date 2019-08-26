@@ -3,9 +3,7 @@ const createReadStream = require('fs').createReadStream
 const path = require('path')
 const createInterface = require('readline').createInterface
 const BabyDomain = require('./models/babydomains').BabyDomain
-const keys = require('./keys')
-let logger = keys.nodeEnv === 'development' ?
-    require('./logger_dev').logger : require('./logger_prod').logger
+let logger = require('./logger')
 
 /**
  * function parsing domains from the file and storing them to mongodb

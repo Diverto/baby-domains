@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crawler-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      component: crawler
+  template:
+    metadata:
+      labels:
+        component: crawler
+    spec:
+      containers:
+        - name: crawler
+          image: tandrosdiv/baby-crawler
+          env: 
+            - name: MONGOPROTOCOL
+              valueFrom: 
+                secretKeyRef:
+                  name: mongoprotocol
+                  key:  
+          resources:
+
