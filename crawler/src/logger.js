@@ -1,12 +1,12 @@
+/* eslint-disable no-undef */
 const {transports, createLogger, format, config, addColors} = require('winston');
-const keys = require('./keys')
 
-const env = keys.nodeEnv || 'development'
+const envVar = process.env.NODE_ENV || 'development'
 
-console.log(`nodeenv: ${env}`)
+console.log(`nodeenv: ${envVar}`)
 
 let logger
-if (env === 'development') {
+if (envVar === 'development') {
     addColors(config.npm.colors)
     logger = createLogger({
         format: format.combine(
@@ -53,7 +53,7 @@ if (env === 'development') {
             })
         ]
     });
-} else if (env === 'production') {
+} else {
     // Imports the Google Cloud client library for Winston
     const {LoggingWinston} = require('@google-cloud/logging-winston');
 
