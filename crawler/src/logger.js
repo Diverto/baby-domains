@@ -3,6 +3,8 @@ const keys = require('./keys')
 
 const env = keys.nodeEnv || 'development'
 
+console.log(`nodeenv: ${env}`)
+
 let logger
 if (env === 'development') {
     addColors(config.npm.colors)
