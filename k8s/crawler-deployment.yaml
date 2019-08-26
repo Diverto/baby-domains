@@ -20,6 +20,36 @@ spec:
               valueFrom: 
                 secretKeyRef:
                   name: mongoprotocol
-                  key:  
+                  key: MONGOPROTOCOL
+            - name: MONGOPROTOCOL
+              valueFrom: 
+                secretKeyRef:
+                  name: mongouser
+                  key: MONGOUSER
+            - name: MONGOPROTOCOL
+              valueFrom: 
+                secretKeyRef:
+                  name: mongohost
+                  key: MONGOHOST
+            - name: MONGOPROTOCOL
+              valueFrom: 
+                secretKeyRef:
+                  name: mongodatabase
+                  key: MONGODATABASE
+            - name: MONGOPROTOCOL
+              valueFrom: 
+                secretKeyRef:
+                  name: mongopassword
+                  key: MONGOPASSWORD
+            - name: MONGOPROTOCOL
+              valueFrom: 
+                secretKeyRef:
+                  name: mongoport
+                  key: MONGOPORT
+            - name: MONGOPROTOCOL
+              valueFrom: 
+                secretKeyRef:
+                  name: nodenv
+                  key: nodenv
           resources:
 

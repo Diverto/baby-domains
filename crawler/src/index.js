@@ -13,12 +13,12 @@ const logger = require('./logger')
     try {
         
 
-        new CronJob('0 18 * * *', async function() {
+        new CronJob('*/5 * * * *', async function() {
             const { db } = await mongoConnect()
             const { dateRegistered, dateFilename } = await fetchStoreZippedDomainFile();
             await parseDomainsAndStore({dateRegistered, dateFilename})
             await mongoClose(db)
-          }, null, true, 'Europe/Vienna');
+          }, null, true, 'Europe/Vienna', undefined, true);
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
         logger.error(`* main: ${error}`)

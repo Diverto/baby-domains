@@ -3,7 +3,7 @@ const keys = require('./keys')
 
 const env = keys.nodeEnv || 'development'
 
-let logger = undefined
+let logger
 if (env === 'development') {
     addColors(config.npm.colors)
     logger = createLogger({

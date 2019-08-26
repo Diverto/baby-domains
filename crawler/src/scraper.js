@@ -8,7 +8,7 @@ const validator = require('validator')
 const cheerio = require('cheerio')
 const unzipper = require('unzipper')
 const dateToFilename = require('./util').dateToFilename
-let logger = require('./logger')
+const logger = require('./logger')
 
 /**
  * function for obtaining registered date from 

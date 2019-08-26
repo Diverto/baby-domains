@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 const fs = require('fs')
 const path = require('path')
-// const unzipper = require('unzipper')
 const cheerio = require('cheerio')
 const rewire = require('rewire')
 const isHtml = require('is-html')
