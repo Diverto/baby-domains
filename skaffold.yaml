@@ -12,6 +12,14 @@ build:
         '**/*.js': .
         '**/*.css': .
         '**/*.html': .
+    - image: tandrosdiv/baby-api
+      context: server
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        '**/*.js': .
+        '**/*.css': .
+        '**/*.html': .
 deploy:
   kubectl:
     manifests:
