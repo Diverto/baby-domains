@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const keys = require('../keys')
+const { mongoProtocol, mongoHost, 
+    mongoPort, mongoDatabase, mongoUser, mongoPassword} = require('../keys')
 
 const logger = require('./logger')
 
@@ -7,11 +8,11 @@ exports.mongoConnect = async () => {
     logger.debug('Executing mongoConnect function')
     try {
         let uri = ''
-        if (keys.mongoProtocol === 'mongodb') {
-            uri = `${keys.mongoProtocol}://${keys.mongoHost}:${keys.mongoPort}/${keys.mongoDatabase}`
+        if (mongoProtocol === 'mongodb') {
+            uri = `${mongoProtocol}://${mongoHost}:${mongoPort}/${mongoDatabase}`
         } else {
-            uri = `${keys.mongoProtocol}://${keys.mongoUser}:${keys.mongoPassword}@` +
-        `${keys.mongoHost}/${keys.mongoDatabase}?retryWrites=true&w=majority`
+            uri = `${mongoProtocol}://${mongoUser}:${mongoPassword}@` +
+        `${mongoHost}/${mongoDatabase}?retryWrites=true&w=majority`
         }
         const db = await mongoose.connect(uri, {
             useNewUrlParser: true,
