@@ -23,34 +23,42 @@ spec:
                 secretKeyRef:
                   name: mongoprotocol
                   key: MONGOPROTOCOL
-            - name: MONGOPROTOCOL
+            - name: MONGOUSER
               valueFrom: 
                 secretKeyRef:
                   name: mongouser
                   key: MONGOUSER
-            - name: MONGOPROTOCOL
+            - name: MONGOHOST
               valueFrom: 
                 secretKeyRef:
                   name: mongohost
                   key: MONGOHOST
-            - name: MONGOPROTOCOL
+            - name: MONGODATABASE
               valueFrom: 
                 secretKeyRef:
                   name: mongodatabase
                   key: MONGODATABASE
-            - name: MONGOPROTOCOL
+            - name: MONGOPASSWORD
               valueFrom: 
                 secretKeyRef:
                   name: mongopassword
                   key: MONGOPASSWORD
-            - name: MONGOPROTOCOL
+            - name: MONGOPORT
               valueFrom: 
                 secretKeyRef:
                   name: mongoport
                   key: MONGOPORT
-            - name: MONGOPROTOCOL
+            - name: NODE_ENV
               valueFrom: 
                 secretKeyRef:
                   name: nodenv
-                  key: nodenv
-          resources:          
+                  key: NODE_ENV
+            - name: PORT
+              valueFrom: 
+                secretKeyRef:
+                  name: expressport
+                  key: PORT
+          resources:
+            limits:
+              memory: "96Mi"
+              cpu: "100m"      

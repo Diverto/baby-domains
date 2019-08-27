@@ -18,7 +18,7 @@ if (envVar === 'development') {
         ),
         transports: [
             new transports.Console({
-                level: env === 'development'? 'info' : 'warn',
+                level: 'info',
                 colorize: true,
                 format: format.combine(
                     format.timestamp({
@@ -29,7 +29,7 @@ if (envVar === 'development') {
                 )
             }),
             new transports.File({
-                level: env === 'development'? 'debug' : 'info',
+                level: 'debug',
                 filename: 'logs/debug.log',
                 maxsize: 1024 * 1024 * 30, // 30MB
                 format: format.combine(
