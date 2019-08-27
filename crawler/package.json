@@ -8,9 +8,9 @@
   },
   "scripts": {
     "start": "node src/index.js",
-    "dev": "env-cmd -f .env.local nodemon src/index.js",
+    "dev": "env-cmd -f .env nodemon src/index.js",
     "lint-staged": "lint-staged",
-    "test:dev": "env-cmd -f .env.local jest ",
+    "test:dev": "env-cmd -f .env jest ",
     "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "test:codecov": "jest --coverage",
     "test:prod": "jest --bail",
@@ -21,7 +21,7 @@
     "*.js": [
       "eslint --fix",
       "git add",
-      "env-cmd -f .env.local jest --bail --findRelatedTests"
+      "env-cmd -f .env jest --bail --findRelatedTests"
     ]
   },
   "husky": {
