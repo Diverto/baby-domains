@@ -1,7 +1,8 @@
 /* eslint-disable no-undef */
 const {transports, createLogger, format, config, addColors} = require('winston');
+const { nodeEnv } = require('./keys')
 
-const envVar = process.env.NODE_ENV || 'development'
+const envVar = nodeEnv || 'development'
 
 console.log(`nodeenv: ${envVar}`)
 
