@@ -1,5 +1,5 @@
 const express = require('express')
-const mongoConnect = require('./db/mongoose')
+const mongoConnect = require('./db/mongoose').mongoConnect
 const domainRouter = require('./routers/domains')
 
 const app = express()

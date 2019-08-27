@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
 const keys = require('../keys')
 
-const logger = keys.nodeEnv === 'development' ? 
-    require('../logger_dev').logger : require('../logger_prod').logger 
+const logger = require('./logger')
 
 exports.mongoConnect = async () => {
     logger.debug('Executing mongoConnect function')
