@@ -13,7 +13,7 @@ const logger = require('./logger')
     try {
         
 
-        new CronJob('*/5 * * * *', async function() {
+        new CronJob('0 18 * * *', async function() {
             const { db } = await mongoConnect()
             const { dateRegistered, dateFilename } = await fetchStoreZippedDomainFile();
             await parseDomainsAndStore({dateRegistered, dateFilename})

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const { mongoProtocol, mongoHost, 
     mongoPort, mongoDatabase, mongoUser, mongoPassword} = require('../keys')
 
-const logger = require('./logger')
+const logger = require('../logger')
 
 exports.mongoConnect = async () => {
     logger.debug('Executing mongoConnect function')
