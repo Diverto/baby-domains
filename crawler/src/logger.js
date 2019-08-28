@@ -4,8 +4,6 @@ const { nodeEnv } = require('./keys')
 
 const envVar = nodeEnv || 'development'
 
-console.log(`nodeenv: ${envVar}`)
-
 let logger
 if (envVar === 'development') {
     addColors(config.npm.colors)
