@@ -3,6 +3,11 @@ services:
   - docker
 
 before_install:
+  - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in baby-domains-249012-53cfe28387fb.json.enc -out baby-domains-249012-53cfe28387fb.json -d
+  - curl https://sdk.cloud.google.com | bash > /dev/null
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl 
+  - gcloud auth activate-service-account --key-file service-account.json
   - docker build -t tandrosdiv/baby-api -f ./server/Dockerfile.dev ./server
   - docker build -t tandrosdiv/baby-crawler -f ./crawler/Dockerfile.dev ./crawler
 
