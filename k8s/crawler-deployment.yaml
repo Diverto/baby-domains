@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: crawler-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       component: crawler
@@ -12,6 +12,7 @@ spec:
       labels:
         component: crawler
     spec:
+      dnsPolicy: Default
       containers:
         - name: crawler
           image: tandrosdiv/baby-crawler
@@ -53,6 +54,6 @@ spec:
                   key: NODE_ENV
           resources:
             limits:
-              memory: "182Mi"
+              memory: "512Mi"
               cpu: "300m"
 
