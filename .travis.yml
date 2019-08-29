@@ -1,6 +1,10 @@
 sudo: required
 services:
   - docker
+env:
+  global:
+    - SHA=$(git rev-parse HEAD) 
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 
 before_install:
   - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in baby-domains-249012-53cfe28387fb.json.enc -out baby-domains-249012-53cfe28387fb.json -d
@@ -8,6 +12,10 @@ before_install:
   - source $HOME/google-cloud-sdk/path.bash.inc
   - gcloud components update kubectl 
   - gcloud auth activate-service-account --key-file service-account.json
+  - gcloud config set project baby-domains-249012 
+  - gcloud config set compute/zone europe-west3-c
+  - gcloud container clusters get-credentials baby-cluster
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker build -t tandrosdiv/baby-api -f ./server/Dockerfile.dev ./server
   - docker build -t tandrosdiv/baby-crawler -f ./crawler/Dockerfile.dev ./crawler
 
@@ -28,11 +36,9 @@ script:
 after_success:
   - docker run -e CI=true tandrosdiv/baby-crawler /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:monitor"
   - docker run -e CI=true tandrosdiv/baby-api /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:monitor"
-  - docker build -t tandrosdiv/baby-api ./server
-  - docker build -t tandrosdiv/baby-crawler ./crawler
-  # add snyk monitoring
-  # Log in to Docker CLI, TC
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  # push to Docker Hub
-  - docker push tandrosdiv/baby-api
-  - docker push tandrosdiv/baby-crawler
+ 
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master
