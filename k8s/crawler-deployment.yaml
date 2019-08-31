@@ -52,8 +52,8 @@ spec:
                 secretKeyRef:
                   name: nodenv
                   key: NODE_ENV
-          resources:
-            limits:
-              memory: "512Mi"
-              cpu: "200m"
+          # resources:
+          #   limits:
+          #     memory: "512Mi"
+          #     cpu: "200m"
 

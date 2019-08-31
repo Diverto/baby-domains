@@ -59,7 +59,7 @@ spec:
                 secretKeyRef:
                   name: expressport
                   key: PORT
-          resources:
-            limits:
-              memory: "96Mi"
-              cpu: "100m"      
+          # resources:
+          #   limits:
+          #     memory: "96Mi"
+          #     cpu: "100m"      
