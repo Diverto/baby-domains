@@ -57,11 +57,11 @@ if (envVar === 'development') {
     const {LoggingWinston} = require('@google-cloud/logging-winston');
 
     const loggingWinston = new LoggingWinston(
-        // {
+        {
         // projectId: 'baby-domains-249012',
-        // level: 'info',// log at 'warn' and above ,
-        // logName: "baby-crawler.log"
-        // }
+        level: 'info',// log at 'warn' and above ,
+        logName: "baby-crawler.log"
+        }
         );
 
     // Create a Winston logger that streams to Stackdriver Logging
