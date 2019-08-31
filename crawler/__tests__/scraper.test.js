@@ -94,58 +94,90 @@ describe('Suit of tests that check URL obtaining function', () => {
 
 describe('Suit of tests that check writing of domains zipped file', () => {
     test('Should fail if url is not valid', async () => {
-        const options = {
-            url: 'dsaldsajkljdsakl',
-            encoding: null
+        try {
+            const options = {
+                url: 'dsaldsajkljdsakl',
+                encoding: null
+            }
+            await writeDomainsZippedFile({ options, dateFilename: domainString })
+        } catch (err) {
+            expect(`${err}`)
+            .toMatch(/Cannot parse URL for downloading/)
         }
-        await expect(writeDomainsZippedFile({ options, dateFilename: domainString }))
-        .rejects.toEqual('* writeDomainsZippedFile: cannot parse URL for downloading')
     })
     test('Should fail if url is not present', async () => {
-        const options = {
-            encoding: null
+        try {
+            const options = {
+                encoding: null
+            }
+            await expect(writeDomainsZippedFile({ options, dateFilename: domainString }))
+        } catch (err) {
+            expect(`${err}`)
+            .toMatch(/Cannot parse URL for downloading/)
         }
-        await expect(writeDomainsZippedFile({ options, dateFilename: domainString }))
-        .rejects.toEqual('* writeDomainsZippedFile: cannot parse URL for downloading')
     })
     test('Should fail if fs string is not valid', async () => {
-        const options = {
-            url: 'https://www.diverto.hr',
-            encoding: null
+        try {
+            const options = {
+                url: 'https://www.diverto.hr',
+                encoding: null
+            }
+            await expect(writeDomainsZippedFile({ options, dateFilename: '321,3n12312,n' }))
+        } catch (err) {
+            expect(`${err}`)
+            .toMatch(/Path is not a valid filesystem path/)
         }
-        await expect(writeDomainsZippedFile({ options, dateFilename: '321,3n12312,n' }))
-        .rejects.toMatch(/Path is not a valid filesystem path/)
     })
     test('Should fail if encoding is wrong', async () => {
-        const options = {
-            url: 'https://www.diverto.hr',
-            encoding: 'json'
+        try {
+            const options = {
+                url: 'https://www.diverto.hr',
+                encoding: 'json'
+            }
+            await expect(writeDomainsZippedFile({ options, dateFilename: domainString }))
+        } catch (err) {
+            expect(`${err}`)
+            .toMatch(/Request should be a binary stream/)
         }
-        await expect(writeDomainsZippedFile({ options, dateFilename: domainString }))
-        .rejects.toEqual('* writeDomainsZippedFile: Request should be a binary stream')
     })
     test('Should fail no encoding is imposed', async () => {
-        const options = {
-            url: 'https://www.diverto.hr',
+        try {
+            const options = {
+                url: 'https://www.diverto.hr',
+            }
+            await expect(writeDomainsZippedFile({ options, dateFilename: domainString }))
+        } catch (err) {
+            expect(`${err}`)
+            .toMatch(/Request should be a binary stream/)
         }
-        await expect(writeDomainsZippedFile({ options, dateFilename: domainString }))
-        .rejects.toEqual('* writeDomainsZippedFile: Request should be a binary stream')
     })
     test('Should fail if filename is missing', async () => {
-        const options = {
-            url: 'https://www.diverto.hr',
-            encoding: null
+        try {
+            const options = {
+                url: 'https://www.diverto.hr',
+                encoding: null
+            }
+            await expect(writeDomainsZippedFile({ options }))
+        } catch (err) {
+            expect(`${err}`)
+            .toMatch(/You cannot omit parameters/)
         }
-        await expect(writeDomainsZippedFile({ options }))
-        .rejects.toMatch(/You cannot omit parameters/)
     })
     test('Should fail if options is missing', async () => {
-        await expect(writeDomainsZippedFile({ dateFilename: domainString }))
-        .rejects.toMatch(/You cannot omit parameters/)
+        try {
+            await expect(writeDomainsZippedFile({ dateFilename: domainString }))
+        } catch (err) {
+            expect(`${err}`)
+            .toMatch(/You cannot omit parameters/)
+        }
     })
     test('Should fail if all parameters are missing', async () => {
-        await expect(writeDomainsZippedFile())
-        .rejects.toMatch(/You cannot omit parameters/)
+        try {
+            await expect(writeDomainsZippedFile())
+        } catch (err) {
+            expect(`${err}`)
+            .toMatch(/You cannot omit parameters/)
+        }
     })
 })
 
