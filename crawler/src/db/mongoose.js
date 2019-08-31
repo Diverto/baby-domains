@@ -1,36 +1,29 @@
 const mongoose = require('mongoose')
-const keys = require('../keys')
+const { mongoProtocol, mongoHost, 
+    mongoPort, mongoDatabase, mongoUser, mongoPassword} = require('../keys')
 
-const logger = keys.nodeEnv === 'development' ? 
-    require('../logger_dev').logger : require('../logger_prod').logger 
+const logger = require('../logger')
 
 exports.mongoConnect = async () => {
     logger.debug('Executing mongoConnect function')
     try {
         let uri = ''
-        if (keys.mongoProtocol === 'mongodb') {
-            uri = `${keys.mongoProtocol}://${keys.mongoHost}:${keys.mongoPort}/${keys.mongoDatabase}`
+        if (mongoProtocol === 'mongodb') {
+            uri = `${mongoProtocol}://${mongoHost}:${mongoPort}/${mongoDatabase}`
         } else {
-            uri = `${keys.mongoProtocol}://${keys.mongoUser}:${keys.mongoPassword}@` +
-        `${keys.mongoHost}/${keys.mongoDatabase}?retryWrites=true&w=majority`
+            uri = `${mongoProtocol}://${mongoUser}:${mongoPassword}@` +
+        `${mongoHost}/${mongoDatabase}?retryWrites=true&w=majority`
         }
-        
         const db = await mongoose.connect(uri, {
             useNewUrlParser: true,
             useCreateIndex: true,
             useFindAndModify:false
         })
         logger.info('Connected to mongodb')
-        return {
-            dbError: undefined,
-            db
-        }
+        return { db }
     } catch (e) {
-        logger.error(`function mongoConnect: ${e}`)
-        return {
-            dbError: e,
-            db: undefined
-        }
+        const error = `${e}`.replace(/Error:/gi, '>')
+        throw new Error(`* mongoConnect: ${error}`)
     }
 }
 
@@ -39,6 +32,7 @@ exports.mongoClose = async (db) => {
     try {
         await db.disconnect()
     } catch (e) {
-        logger.error(`function mongoClose: ${e}`)
+        const error = `${e}`.replace(/Error:/gi, '>')
+        throw new Error(`* mongoClose: ${error}`)
     }
 }

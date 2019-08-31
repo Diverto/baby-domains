@@ -1,10 +1,14 @@
 const express = require('express')
-const mongoConnect = require('./db/mongoose')
-const domainRouter = require('./routers/domains')
+const mongoConnect = require('./db/mongoose').mongoConnect
+// const domainRouter = require('./routers/domains')
 
 const app = express()
 
-app.use(domainRouter)
+app.get('/', (req, res) => {
+    res.send('Hi');
+  });  
+
+// app.use(domainRouter)
 
 // ESLint-happy IIFE
 !async function () {

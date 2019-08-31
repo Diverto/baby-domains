@@ -1,39 +1,27 @@
 /**
  * @module crawler
  */
+var CronJob = require('cron').CronJob
 const mongoConnect = require('./db/mongoose').mongoConnect
 const mongoClose = require('./db/mongoose').mongoClose
-const getHtml = require('./scraper').getHtml
-const saveHtmlToFile = require('./scraper').saveHtmlToFile
-const fetchZippedDomainFile = require('./scraper').fetchZippedDomainFile
-const keys = require('./keys')
-// const cheerio = require('cheerio')
-// const BabyDomain = require('./models/babydomains')
-const logger = keys.nodeEnv === 'development' ? 
-    require('./logger_dev').logger : require('./logger_prod').logger 
-
+const fetchStoreZippedDomainFile = require('./scraper').fetchStoreZippedDomainFile
+const parseDomainsAndStore = require('./parseAndStore').parseDomainsAndStore
+const logger = require('./logger')
 
 // ESLint-happy IIFE
 !async function main() {
     try {
-        const { dbError, db } = await mongoConnect()
-        if (dbError) {
-            throw new Error(dbError)
-        }
-        const { parseError, html } = await getHtml('http://whoisds.com/newly-registered-domains')
-        if (parseError) {
-            throw new Error(parseError)
-        }
-        saveHtmlToFile(html)
-        const { zippedDomainError, writePath, dateRegistered } = await fetchZippedDomainFile(html)
-        if(zippedDomainError) {
-            throw new Error (zippedDomainError)
-        }
-        console.log(`Writepath: ${writePath} | Date registered: ${dateRegistered}`)
-        await mongoClose(db)
-        return
+        
+
+        new CronJob('0 18 * * *', async function() {
+            const { db } = await mongoConnect()
+            const { dateRegistered, dateFilename } = await fetchStoreZippedDomainFile();
+            await parseDomainsAndStore({dateRegistered, dateFilename})
+            await mongoClose(db)
+          }, null, true, 'Europe/Vienna');
     } catch (e) {
-        logger.error(`Function main: ${e}`)
-        return
+        const error = `${e}`.replace(/^Error:/, '>')
+        logger.error(`* main: ${error}`)
+        process.exit(-1)
     }
 }()

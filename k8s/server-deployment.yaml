@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      component: server
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      dnsPolicy: Default
+      containers:
+        - name : server
+          image: tandrosdiv/baby-api
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MONGOPROTOCOL
+              valueFrom: 
+                secretKeyRef:
+                  name: mongoprotocol
+                  key: MONGOPROTOCOL
+            - name: MONGOUSER
+              valueFrom: 
+                secretKeyRef:
+                  name: mongouser
+                  key: MONGOUSER
+            - name: MONGOHOST
+              valueFrom: 
+                secretKeyRef:
+                  name: mongohost
+                  key: MONGOHOST
+            - name: MONGODATABASE
+              valueFrom: 
+                secretKeyRef:
+                  name: mongodatabase
+                  key: MONGODATABASE
+            - name: MONGOPASSWORD
+              valueFrom: 
+                secretKeyRef:
+                  name: mongopassword
+                  key: MONGOPASSWORD
+            - name: MONGOPORT
+              valueFrom: 
+                secretKeyRef:
+                  name: mongoport
+                  key: MONGOPORT
+            - name: NODE_ENV
+              valueFrom: 
+                secretKeyRef:
+                  name: nodenv
+                  key: NODE_ENV
+            - name: PORT
+              valueFrom: 
+                secretKeyRef:
+                  name: expressport
+                  key: PORT
+          resources:
+            limits:
+              memory: "96Mi"
+              cpu: "100m"      

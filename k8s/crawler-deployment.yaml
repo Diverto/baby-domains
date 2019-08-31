@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crawler-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      component: crawler
+  template:
+    metadata:
+      labels:
+        component: crawler
+    spec:
+      dnsPolicy: Default
+      containers:
+        - name: crawler
+          image: tandrosdiv/baby-crawler
+          env: 
+            - name: MONGOPROTOCOL
+              valueFrom: 
+                secretKeyRef:
+                  name: mongoprotocol
+                  key: MONGOPROTOCOL
+            - name: MONGOUSER
+              valueFrom: 
+                secretKeyRef:
+                  name: mongouser
+                  key: MONGOUSER
+            - name: MONGOHOST
+              valueFrom: 
+                secretKeyRef:
+                  name: mongohost
+                  key: MONGOHOST
+            - name: MONGODATABASE
+              valueFrom: 
+                secretKeyRef:
+                  name: mongodatabase
+                  key: MONGODATABASE
+            - name: MONGOPASSWORD
+              valueFrom: 
+                secretKeyRef:
+                  name: mongopassword
+                  key: MONGOPASSWORD
+            - name: MONGOPORT
+              valueFrom: 
+                secretKeyRef:
+                  name: mongoport
+                  key: MONGOPORT
+            - name: NODE_ENV
+              valueFrom: 
+                secretKeyRef:
+                  name: nodenv
+                  key: NODE_ENV
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "300m"
+

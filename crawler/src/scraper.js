@@ -1,3 +1,4 @@
+/* eslint-disable require-atomic-updates */
 const fs = require('fs')
 const path = require('path')
 const rp = require('request-promise')
@@ -5,121 +6,122 @@ const request = require('request')
 const isHtml = require('is-html')
 const validator = require('validator')
 const cheerio = require('cheerio')
-const keys = require('./keys')
-
-let logger = keys.nodeEnv === 'development' ? 
-    require('./logger_dev').logger : require('./logger_prod').logger
+const unzipper = require('unzipper')
+const dateToFilename = require('./util').dateToFilename
+const logger = require('./logger')
 
 /**
  * function for obtaining registered date from 
  * @param {cheerio|node} $ - cheerio object
- * @returns {{domError: Error, dateRegistered: Date}}
+ * @returns {Date} - Date when domains were registered
  * Anonymous object with domError and dateRegistered members
  */
 const domainRegisteredDate = ($) => {
     try {
         const dateRegistered = $('tbody > tr:nth-child(1) > td:nth-child(1)')
-            .text()
-            .trim()
-            .split(' ')[0]
+        .text()
+        .trim()
+        .split(' ')[0]
         if(!validator.isISO8601(dateRegistered)) {
             throw new Error('Invalid date format')
         }
-        return { 
-            domError: undefined,
-            dateRegistered: new Date(dateRegistered)
-        }
-    } catch(e) {
-        logger.error(`Function domainRegisteredDate: ${e}`)
-        return {
-            domError: e,
-            dateRegistered: undefined
-        }
+        return new Date(dateRegistered)
+    } catch (e) {
+        const error = `${e}`.replace(/^Error:/, '>')
+        throw new Error(`* domainRegisteredDate: ${error}`)
     }
+    
 }
 
 /**
  * function for obtaining URL from parsed HTML
  * @param {cheerio|node} $ - cheerio object
- * @returns {{urlError: Error, downloadUrl: string}}
+ * @returns {string} - Download URL for zip file
  * Anonymous object with urlError and downloadUrl members
  */
 const obtainDownloadUrl = ($) => {
     try {
+        logger.debug('Executing obtainDownloadUrl function')
         const downloadUrl = $('table > tbody > tr:nth-child(1) > td:nth-child(4) > a')
             .attr('href')
         if (!validator.isURL(downloadUrl)) {
             throw new Error('cannot parse URL for downloading')
         }
-        return {
-            urlError: undefined,
-            downloadUrl
-        }
+        return downloadUrl
     } catch (e) {
-        logger.error(`Function obtainDownloadUrl: ${e}`)
-        return {
-            urlError: e,
-            downloadUrl: undefined
-        }
+        const error = `${e}`.replace(/^Error:/gi, '>')
+        throw new Error(`* obtainDownloadUrl: ${error}`)
     }
-    
 }
 
 /**
  * function for writing zipfile that contains baby domains
  * @param {object} options - options for request to obtain binary file
  * @param {Date} dateRegistered - parsed registered date from site
- * @returns {{writeError: Error, writePath: string}}
+ * @returns {string} - Path where zipped file was stored
  * Anonymous object with writeError and writePath members
  */
-const writeDomainsZippedFile = async (options, dateRegistered) => {
-    try {
-        const writePath = path.join(__dirname, '..', 'data', 
-            `domains-${dateRegistered.getFullYear()}` + 
-            `-${dateRegistered.getMonth() + 1}-${dateRegistered.getUTCDate()}.zip`)
-        const writeStream = fs.createWriteStream(writePath)
-        await request.get(options).pipe(writeStream)
-        logger.info(`Zipped file written to: ${writePath}`)
-        return {
-            writeError: undefined,
-            writePath
-        }
-    } catch (e) {
-        logger.error(e)
-        return {
-            writeError: e,
-            writePath: undefined
-        }
-    }
-    
+const writeDomainsZippedFile = async ({options = {}, dateFilename = ''} = {}) => {
+        return new Promise((resolve, reject) => {
+            if ((!Object.keys(options).length) || dateFilename === '') {
+                return reject('* writeDomainsZippedFile: You cannot omit parameters')
+            }
+            if(!Object.prototype.hasOwnProperty.call(options, 'encoding') 
+                || options.encoding !== null) {
+                    return reject('* writeDomainsZippedFile: Request should be a binary stream') 
+            }
+            if (!Object.prototype.hasOwnProperty.call(options, 'url') || 
+                !validator.isURL(options.url)) {
+                return reject('* writeDomainsZippedFile: cannot parse URL for downloading')
+            }
+            try {
+                const pathRel = path.relative(
+                    path.join(__dirname, '..', 'data'), dateFilename)
+                
+                if ((pathRel.split("/").length - 1 > 3) || 
+                    !path.isAbsolute(dateFilename)) {
+                    throw new Error('Path is not a valid filesystem path')
+                }
+            } catch (e) {
+                const error = `${e}`.replace(/^Error:/, '>')
+                return reject(`* writeDomainsZippedFile: ${error}`)
+            }
+            
+            
+            const writePathZip = dateFilename + '.zip'
+            const writeStream = fs.createWriteStream(writePathZip)
+            let req = request.get(options).pipe(writeStream)
+            req.on('close', err => {
+                if (err) {
+                    return reject(`* writeDomainsZippedFile: ${err}`)
+                } else {
+                    logger.info(`Zipped file written to: ${writePathZip}`)
+                    resolve(writePathZip)
+                }
+            })   
+        })
 }
 
 /**
  * function for obtaining HTML file for scraping
  * @param {string} url - URL from which we should obtain HTML File
- * @returns {{parseError: Error, html: string}}
+ * @returns {string} = HTML file thatt was parsed
  * Anonymous object with parseError and html members
  */
-exports.getHtml = async (url) => {
+const getHtml = async (url) => {
     logger.debug('Executing getHtml function')
     try {
         if (!validator.isURL(url)) {
-            throw new TypeError('URL provided is not valid')
+            throw new Error('URL provided is not valid')
         }
         const html = await rp.get(url)
         if (!isHtml(html)) {
-            throw new TypeError('URL exists but is wrong type')
+            throw new Error('URL exists but is wrong type')
         }
-        return {
-            parseError: undefined,
-            html
-        }
+        return html
     } catch (e) {
-        logger.error(`Function getHtml: ${e}`)
-        return {
-            parseError: e,
-            html: undefined
-        }
+        const error = `${e}`.replace(/^Error:/, '>')
+        throw new Error(`* getHtml: ${error}`)
     }
 }
 
@@ -127,60 +129,92 @@ exports.getHtml = async (url) => {
  * function for saving HTML file
  * @param {string} html - HTML file to be saved
  */
-exports.saveHtmlToFile = (html) => {
+const saveHtmlToFile = (html) => {
     try {
         logger.debug('Crawled html file is being saved to test.html...')
-        const writePath = './tests/test.html'
+        if (!isHtml(html)) {
+            throw new Error('saveHtmlToFile: URL exists but is wrong type')
+        }
+        const writePath = path.join(__dirname, '..', 'testdata','test.html')
         fs.writeFileSync(writePath, html)
         logger.info(`HTML file written into: ${writePath}`)
     } catch (e) {
-        logger.error(`Function saveHtmlToFile: ${e}`)
-        return
+        const error = `${e}`.replace(/^Error:/, '>')
+        throw new Error(`* saveHtmlToFile: ${error}`)
     }
-    
+}
+
+/**
+ * function for obtaining URL from parsed HTML
+ * @param {string} writePathZip path to the zip file
+ * @returns {Promise} - temporary path of the unzipped txt file if promise is fullfiled
+ * Anonymous object with urlError and downloadUrl members
+ */
+const convertZipToTxt = (writePathZip = '') => {
+    return new Promise((resolve, reject) => {
+        if (typeof writePathZip !== 'string') {
+            return reject('* convertZipToTxt: Argument should be string')
+        }
+        const pathRel = path.relative(
+            path.join(__dirname, '..', 'data'), writePathZip)
+        
+        if ((pathRel.split("/").length - 1 > 3) || 
+            !path.isAbsolute(writePathZip)) {
+                return reject('* convertZipToTxt: Path is not a valid filesystem path')
+        }
+        logger.info(`writePath inside convertZipToTxt: ${writePathZip}`)
+        const fileContents = fs.createReadStream(writePathZip)
+        let writePathTemp = writePathZip.substring(0, 
+            writePathZip.lastIndexOf('/') + 1)
+        let res = fileContents.pipe(unzipper.Extract({ path: writePathTemp }))
+          .on('close', err => {
+            if (err) {
+                const error = `${err}`.replace(/^Error:/, '>')
+                return reject(`* convertZipToTxt: ${error}`)
+            } else {
+                writePathTemp += 'domain-names.txt'}
+                resolve(writePathTemp)
+            }
+        )
+        res.on('error', err => {
+            const error = `${err}`.replace(/^Error:/, '>')
+            return reject(`* convertZipToTxt: ${error}`)
+        })
+    })
 }
 
 
 /**
  * function saving zipped file that contains baby domains, and 
- * @param {string} url - URL from which we should obtain HTML File
- * @returns {{fetchZipError: Error, writePath: string}}
+ * @param {string} html - html file that contains link to the zip file
+ * @returns {{writePathZip: string, dateRegistered: Date}}
  */
-exports.fetchZippedDomainFile = async (html) => {
+exports.fetchStoreZippedDomainFile = async () => {
     logger.debug('Called fetchZippedDomainFile to obtain domains zip file')
     try {
-        if (!isHtml(html)) {
-            throw new Error('Not a valid HTML file')
-        }
+        const html  = await getHtml('http://whoisds.com/newly-registered-domains')
+        saveHtmlToFile(html)
+        
         const $ = cheerio.load(html)
-        const { domError, dateRegistered } = domainRegisteredDate($)
-        if (domError) {
-            throw new Error(domError)
-        }
-        const { urlError, downloadUrl } = obtainDownloadUrl($)
-        if (urlError) {
-            throw new Error(urlError)
-        }
+        const dateRegistered = domainRegisteredDate($)
+        let dateFilename = dateToFilename(dateRegistered)
+        const downloadUrl = obtainDownloadUrl($)
+        
         const options = {
             url: downloadUrl,
             encoding: null
         }
-        const { writeError, writePath } = await writeDomainsZippedFile(options, dateRegistered)
-        if (writeError) {
-            throw new Error(writeError)
-        }
-        return {
-            zippedDomainError: undefined,
-            writePath,
-            dateRegistered
-        }
+     
+        const writePathZip = await writeDomainsZippedFile({ options, dateFilename })
+        logger.info(`writePathZip: ${writePathZip}`)
+        const writePathTemp = await convertZipToTxt(writePathZip)
+        dateFilename += '.txt'
+        fs.renameSync(writePathTemp, dateFilename)
+        return { dateRegistered, dateFilename }
+        
     } catch (e) {
-        logger.error(`Function fetchZippedDomainFile: ${e}`)
-        return {
-            zippedDomainError: e,
-            writePath: undefined,
-            dateRegistered: undefined
-        }
+        const error = `${e}`.replace(/^Error:/, '>')
+        throw new Error(`* fetchStoreZippedDomainFile: ${error}`)
     }
 }
 

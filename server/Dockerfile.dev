@@ -1,4 +1,4 @@
-FROM node:lts-buster-slim
+FROM node:latest
 
 WORKDIR /app
 
@@ -9,7 +9,8 @@ RUN apt-get install -y mercurial
 
 COPY package.json .
 RUN npm install
+RUN npm install -g snyk
 
 COPY . .
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:ci"]
