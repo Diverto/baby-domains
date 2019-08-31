@@ -1,5 +1,7 @@
 /* eslint-disable require-atomic-updates */
 const fs = require('fs')
+const fsPromises = fs.promises;
+const pEvent = require('p-event');
 const path = require('path')
 const rp = require('request-promise')
 const request = require('request')
@@ -62,44 +64,38 @@ const obtainDownloadUrl = ($) => {
  * Anonymous object with writeError and writePath members
  */
 const writeDomainsZippedFile = async ({options = {}, dateFilename = ''} = {}) => {
-        return new Promise((resolve, reject) => {
+        try {
             if ((!Object.keys(options).length) || dateFilename === '') {
-                return reject('* writeDomainsZippedFile: You cannot omit parameters')
+                throw new Error('You cannot omit parameters')
             }
             if(!Object.prototype.hasOwnProperty.call(options, 'encoding') 
                 || options.encoding !== null) {
-                    return reject('* writeDomainsZippedFile: Request should be a binary stream') 
+                    throw new Error('Request should be a binary stream') 
             }
             if (!Object.prototype.hasOwnProperty.call(options, 'url') || 
                 !validator.isURL(options.url)) {
-                return reject('* writeDomainsZippedFile: cannot parse URL for downloading')
+                throw new Error('Cannot parse URL for downloading')
             }
-            try {
-                const pathRel = path.relative(
-                    path.join(__dirname, '..', 'data'), dateFilename)
-                
-                if ((pathRel.split("/").length - 1 > 3) || 
-                    !path.isAbsolute(dateFilename)) {
-                    throw new Error('Path is not a valid filesystem path')
-                }
-            } catch (e) {
-                const error = `${e}`.replace(/^Error:/, '>')
-                return reject(`* writeDomainsZippedFile: ${error}`)
+    
+            const pathRel = path.relative(
+                path.join(__dirname, '..', 'data'), dateFilename)
+            
+            if ((pathRel.split("/").length - 1 > 3) || 
+                !path.isAbsolute(dateFilename)) {
+                throw new Error('Path is not a valid filesystem path')
             }
-            
-            
+            // if data folder doesn't exist
+            await fsPromises.mkdir(path.dirname(dateFilename), { recursive: true })
             const writePathZip = dateFilename + '.zip'
             const writeStream = fs.createWriteStream(writePathZip)
             let req = request.get(options).pipe(writeStream)
-            req.on('close', err => {
-                if (err) {
-                    return reject(`* writeDomainsZippedFile: ${err}`)
-                } else {
-                    logger.info(`Zipped file written to: ${writePathZip}`)
-                    resolve(writePathZip)
-                }
-            })   
-        })
+            await pEvent(req, 'close')
+            logger.info(`Zipped file written to: ${writePathZip}`)
+            return writePathZip
+        } catch (e) {
+            const error = `${e}`.replace(/^Error:/, '>')
+            throw new Error(`* writeDomainsZippedFile: ${error}`)
+        }
 }
 
 /**
@@ -162,7 +158,7 @@ const convertZipToTxt = (writePathZip = '') => {
             !path.isAbsolute(writePathZip)) {
                 return reject('* convertZipToTxt: Path is not a valid filesystem path')
         }
-        logger.info(`writePath inside convertZipToTxt: ${writePathZip}`)
+        
         const fileContents = fs.createReadStream(writePathZip)
         let writePathTemp = writePathZip.substring(0, 
             writePathZip.lastIndexOf('/') + 1)
