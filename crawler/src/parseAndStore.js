@@ -13,7 +13,6 @@ let logger = require('./logger')
 exports.parseDomainsAndStore = 
     async ({ dateRegistered = new Date('1970-01-01'), dateFilename = '' } = {}) => {
     try {
-        console.log(dateRegistered, dateFilename)
         logger.debug('Executing parseDomainsAndStore function')
     
         if (dateFilename === '' || dateRegistered === new Date('1970-01-01')) {
