@@ -13,7 +13,7 @@ let logger = require('./logger')
 exports.parseDomainsAndStore = 
     async ({ dateRegistered = new Date('1970-01-01'), dateFilename = '' } = {}) => {
     try {
-        logger.debug('Executing parseDomainsAndStore function')
+        logger.debug('Executing crawler/parseDomainsAndStore function')
     
         if (dateFilename === '' || dateRegistered === new Date('1970-01-01')) {
             throw new Error('You cannot omit parameters')

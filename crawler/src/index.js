@@ -16,7 +16,7 @@ const logger = require('./logger')
             const { dateRegistered, dateFilename } = await fetchStoreZippedDomainFile();
             await parseDomainsAndStore({dateRegistered, dateFilename})
             await mongoClose(db)
-          }, null, true, 'Europe/Vienna');
+          }, null, true, 'Europe/Vienna', undefined, true);
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
         logger.error(`* main: ${error}`)
