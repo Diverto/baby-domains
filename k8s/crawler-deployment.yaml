@@ -52,6 +52,11 @@ spec:
                 secretKeyRef:
                   name: nodenv
                   key: NODE_ENV
+            - name: CLOUDAMQP_URL
+              valueFrom: 
+                secretKeyRef:
+                  name: cloudamqp-url
+                  key: CLOUDAMQP_URL
           # resources:
           #   limits:
           #     memory: "512Mi"
