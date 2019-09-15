@@ -1,5 +1,5 @@
 const amqp = require('amqplib')
-const { cloudamqpConnectionString } = require('../keys')
+const { cloudamqpConnectionString, exchangeName, routingKey } = require('../keys')
 const logger = require('../logger')
 
 /**
@@ -8,19 +8,19 @@ const logger = require('../logger')
  */
 exports.brokerSetup = async () => {
     try {
-        logger.info("Setting up RabbitMQ Exchanges/Queues");
+        logger.info('Setting up RabbitMQ Exchanges/Queues');
         // connect to RabbitMQ Instance
         const connection = await amqp.connect(cloudamqpConnectionString);
         // create a channel
         let channel = await connection.createChannel();
         // create exchange
-        await channel.assertExchange("babyprocessing", "direct", { durable: true });
+        await channel.assertExchange(exchangeName, 'direct', { durable: true });
         // create queues
-        await channel.assertQueue("babyprocessing.crawlerNotification", { durable: true });
+        await channel.assertQueue(`${exchangeName}.${routingKey}`, { durable: true });
         // bind queues
-        await channel.bindQueue("babyprocessing.crawlerNotification", "babyprocessing", "crawlerNotification");
+        await channel.bindQueue(`${exchangeName}.${routingKey}`, exchangeName, routingKey);
     
-        logger.info("RabbitMQ setup/check completed");
+        logger.info("api-creator RabbitMQ setup/check completed");
         return { channel }
         // process.exit();
     } catch (e) {

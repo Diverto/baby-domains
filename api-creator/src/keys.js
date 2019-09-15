@@ -6,5 +6,7 @@ module.exports = {
     mongoPort: process.env.MONGOPORT,
     mongoProtocol: process.env.MONGOPROTOCOL,
     nodeEnv: process.env.NODE_ENV,
-    cloudamqpConnectionString: process.env.CLOUDAMQP_URL
+    cloudamqpConnectionString: process.env.CLOUDAMQP_URL,
+    exchangeName: 'babyprocessing',
+    routingKey: 'crawlerNotification'
   };
