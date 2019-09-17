@@ -1,0 +1,10 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "crawler/package.json",
+        "server/package.json"
+      ]
+    }
+  }
+}
