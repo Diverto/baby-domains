@@ -17,7 +17,7 @@ exports.brokerSetup = async () => {
         await channel.assertExchange(exchangeName, 'direct', { durable: true });
         // create queues
         await channel.assertQueue(`${exchangeName}.${routingKey}`, { durable: true });
-        // bind queues
+        // bind queues, it coincides that routing key is part of queue name
         await channel.bindQueue(`${exchangeName}.${routingKey}`, exchangeName, routingKey);
     
         logger.info("crawler RabbitMQ setup/check completed");

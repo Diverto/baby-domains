@@ -7,8 +7,8 @@ const listenMessages = require('./processor').listenMessages
 
 !async function main() {
     try {
-        const { ch } = await brokerSetup()
-        await listenMessages(ch)
+        const { channel } = await brokerSetup()
+        await listenMessages(channel)
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
         logger.error(`* api-creator/main: ${error}`)

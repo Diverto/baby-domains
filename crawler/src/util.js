@@ -34,7 +34,7 @@ exports.publishMessage = async ({ channel = {}, exchangeName = '',
     try {
         logger.debug('Executing crawler/publishMessage function')
         if (routingKey === '' || exchangeName === '' || data === '' || 
-            (Object.entries(arguments[0]).length === 0 && 
+        (Object.entries(arguments[0]).length === 0 && 
             arguments[0].constructor === Object)) {
                 throw new Error('You cannot omit parameters')
         }

@@ -8,7 +8,7 @@ const logger = require('../logger')
  */
 exports.brokerSetup = async () => {
     try {
-        logger.info('Setting up RabbitMQ Exchanges/Queues');
+        logger.info(`Setting up RabbitMQ Exchanges/Queues on ${cloudamqpConnectionString}`);
         // connect to RabbitMQ Instance
         const connection = await amqp.connect(cloudamqpConnectionString);
         // create a channel
@@ -25,7 +25,7 @@ exports.brokerSetup = async () => {
         // process.exit();
     } catch (e) {
         const error = `${e}`.replace(/Error:/gi, '>')
-        throw new Error(`* broker: ${error}`)
+        throw new Error(`* brokerSetup: ${error}`)
     }
 
 }

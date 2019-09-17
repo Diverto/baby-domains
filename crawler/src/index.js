@@ -8,7 +8,7 @@ const fetchStoreZippedDomainFile = require('./scraper').fetchStoreZippedDomainFi
 const parseDomainsAndStore = require('./parseAndStore').parseDomainsAndStore
 const logger = require('./logger')
 const brokerSetup = require('./msgbroker/rabbitmq').brokerSetup
-const { exchangeName, routingKey } = require('./logger')
+const { exchangeName, routingKey } = require('./keys')
 const publishMessage = require('./util').publishMessage
 
 // ESLint-happy IIFE

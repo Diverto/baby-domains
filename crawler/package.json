@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node src/index.js",
     "start:ci": "nodemon src/index.js",
-    "dev": "env-cmd -f .env nodemon src/index.js",
+    "dev": "env-cmd -f .env.local nodemon src/index.js",
     "lint-staged": "lint-staged",
     "test:dev": "env-cmd -f .env jest ",
     "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
@@ -37,6 +37,7 @@
     "@google-cloud/logging-winston": "^2.0.1",
     "acorn": "^7.0.0",
     "ajv": "^6.10.2",
+    "amqplib": "^0.5.5",
     "cheerio": "^1.0.0-rc.3",
     "cron": "^1.7.1",
     "env-cmd": "^9.0.3",

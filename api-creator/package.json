@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "start:ci": "nodemon src/index.js",
-    "dev": "env-cmd -f .env nodemon src/index.js",
+    "dev": "env-cmd -f .env.local nodemon src/index.js",
     "lint-staged": "lint-staged",
     "test:dev": "env-cmd -f .env jest ",
     "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
@@ -34,6 +34,7 @@
     "amqplib": "^0.5.5",
     "cron": "^1.7.2",
     "mongoose": "^5.7.0",
+    "validator": "^11.1.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {

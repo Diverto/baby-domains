@@ -19,6 +19,7 @@ exports.mongoConnect = async () => {
             useCreateIndex: true,
             useFindAndModify:false
         })
+        console.log(`uri: ${uri}`)
         logger.info('Connected to mongodb')
         return { db }
     } catch (e) {
