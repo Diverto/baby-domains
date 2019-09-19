@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "start:ci": "nodemon src/index.js",
-    "dev": "env-cmd -f .env.local nodemon src/index.js",
+    "dev": "env-cmd -f .env.local node src/index.js",
     "lint-staged": "lint-staged",
     "test:dev": "env-cmd -f .env jest ",
     "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",

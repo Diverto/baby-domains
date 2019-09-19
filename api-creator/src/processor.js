@@ -56,20 +56,21 @@ exports.listenMessages = async (channel) => {
                             tech_data: 'No requirements to use this feed',
                             icon: imageBig,
                             icon_small: imageSmall,
-                            category: 'Open Soure'
+                            category: 'Open Source'
                         },
                         reports: []
                     }
-                    const curr_time = Date.now()/1000
-                    const regDateString = `${data.dateRegistered.getFullYear()}-
-                    ${('0' + (data.dateRegistered.getMonth() + 1)).slice(-2)}-
-                    ${('0' + data.dateRegistered.getDate()).slice(-2)}`
+                    const curr_time = Math.round(Date.now()/1000)
+                    const registeredDate = new Date(data.dateRegistered)
+                    const regDateString = `${registeredDate.getFullYear()}-` +
+                    `${('0' + (registeredDate.getMonth() + 1)).slice(-2)}-` +
+                    `${('0' + registeredDate.getDate()).slice(-2)}`
                     for(let domain of domains) {
                         let report = {
                             timestamp: curr_time,
                             id: `BABY-${domain.domainName}-${regDateString}`,
-                            title: `New domain ${domain.domainName} 
-                            registered on ${regDateString}`,
+                            title: `New domain ${domain.domainName} ` +
+                            `registered on ${regDateString}`,
                             link: 'http://whoisds.com/newly-registered-domains',
                             score: 30,
                             iocs: {
@@ -81,7 +82,8 @@ exports.listenMessages = async (channel) => {
                         cb_json.reports.push(report)
                     }
                     const json_cb_feed = JSON.stringify(cb_json)
-                    await fsPromises.writeFile(dateToFilename(data.dateRegistered), json_cb_feed)
+                    await fsPromises.writeFile(dateToFilename(registeredDate) + '.json', json_cb_feed)
+                    logger.info(`JSON file for the date ${regDateString} created`)
                     // Object.entries(domains).forEach(([key, value]) => {
                     //     console.log(`${key}: ${value}`);
                     // }) 
