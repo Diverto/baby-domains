@@ -203,6 +203,11 @@ exports.fetchStoreZippedDomainFile = async () => {
      
         const writePathZip = await writeDomainsZippedFile({ options, dateFilename })
         logger.info(`writePathZip: ${writePathZip}`)
+        const zipFileStats = fs.statSync(writePathZip)
+        // if file is smaller than 10kB
+        if (zipFileStats.size/1000 < 10) {
+            throw new Error('File is probably empty or corrupted!')
+        }
         const writePathTemp = await convertZipToTxt(writePathZip)
         dateFilename += '.txt'
         fs.renameSync(writePathTemp, dateFilename)
@@ -210,7 +215,7 @@ exports.fetchStoreZippedDomainFile = async () => {
         
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
-        throw new Error(`* fetchStoreZippedDomainFile: ${error}`)
+        throw new Error(`* crawler/fetchStoreZippedDomainFile: ${error}`)
     }
 }
 

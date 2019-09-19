@@ -14,23 +14,39 @@ const publishMessage = require('./util').publishMessage
 // ESLint-happy IIFE
 !async function main() {
     try {
-        new CronJob('0 18 * * *', async function() {
-            const { db } = await mongoConnect()
-            const { connection, channel } = await brokerSetup()
-            const { dateRegistered, dateFilename } = await fetchStoreZippedDomainFile();
-            await parseDomainsAndStore({dateRegistered, dateFilename})
-            const data = {
-                'status': 'completed',
-                'dateRegistered': dateRegistered
+        new CronJob('0 18 * * *', async function () {
+            try {
+                const { db } = await mongoConnect()
+                const { db } = await mongoConnect()
+                const { connection, channel } = await brokerSetup()
+                const { dateRegistered, dateFilename } = await fetchStoreZippedDomainFile();
+                await parseDomainsAndStore({ dateRegistered, dateFilename })
+                const data = {
+                    'status': 'completed',
+                    'dateRegistered': dateRegistered
+                }
+                await publishMessage({ channel, exchangeName, routingKey, data })
+                await channel.close()
+                await connection.close()
+                await mongoClose(db)const { connection, channel } = await brokerSetup()
+                const { dateRegistered, dateFilename } = await fetchStoreZippedDomainFile();
+                await parseDomainsAndStore({ dateRegistered, dateFilename })
+                const data = {
+                    'status': 'completed',
+                    'dateRegistered': dateRegistered
+                }
+                await publishMessage({ channel, exchangeName, routingKey, data })
+                await channel.close()
+                await connection.close()
+                await mongoClose(db)
+            } catch (e) {
+                const error = `${e}`.replace(/^Error:/, '>')
+                throw new Error(`* crawler/cronjob: ${error}`)
             }
-            await publishMessage( { channel, exchangeName, routingKey, data })
-            await channel.close()
-            await connection.close()
-            await mongoClose(db)
-          }, null, true, 'Europe/Vienna', undefined, true);
+
+        }, null, true, 'Europe/Vienna', undefined, true);
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
-        logger.error(`* main: ${error}`)
-        process.exit(-1)
+        logger.error(`* crawler/main: ${error}`)
     }
 }()
