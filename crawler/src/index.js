@@ -17,18 +17,7 @@ const publishMessage = require('./util').publishMessage
         new CronJob('0 18 * * *', async function () {
             try {
                 const { db } = await mongoConnect()
-                const { db } = await mongoConnect()
                 const { connection, channel } = await brokerSetup()
-                const { dateRegistered, dateFilename } = await fetchStoreZippedDomainFile();
-                await parseDomainsAndStore({ dateRegistered, dateFilename })
-                const data = {
-                    'status': 'completed',
-                    'dateRegistered': dateRegistered
-                }
-                await publishMessage({ channel, exchangeName, routingKey, data })
-                await channel.close()
-                await connection.close()
-                await mongoClose(db)const { connection, channel } = await brokerSetup()
                 const { dateRegistered, dateFilename } = await fetchStoreZippedDomainFile();
                 await parseDomainsAndStore({ dateRegistered, dateFilename })
                 const data = {
