@@ -3,7 +3,7 @@ const path = require('path')
 const fsPromises = fs.promises;
 
 const logger = require('./logger')
-const { exchangeName, routingKey, imageSmall, imageBig } = require('./keys')
+const { exchangeName, routingKey, imageSmall, imageBig, retentionPolicy } = require('./keys')
 const mongoConnect = require('./db/mongoose').mongoConnect
 const mongoClose = require('./db/mongoose').mongoClose
 const BabyDomain = require('./models/babydomains').BabyDomain
@@ -62,9 +62,15 @@ exports.listenMessages = async (channel) => {
                     }
                     const curr_time = Math.round(Date.now()/1000)
                     const registeredDate = new Date(data.dateRegistered)
+                    // date for which retention policy is applied
+                    let removeDomainsDate = new Date(data.dateRegistered)
+                    removeDomainsDate.setDate(removeDomainsDate.getDate() - retentionPolicy)
                     const regDateString = `${registeredDate.getFullYear()}-` +
                     `${('0' + (registeredDate.getMonth() + 1)).slice(-2)}-` +
                     `${('0' + registeredDate.getDate()).slice(-2)}`
+                    // const removeDomainsDateString = `${removeDomainsDate.getFullYear()}-` +
+                    // `${('0' + (removeDomainsDate.getMonth() + 1)).slice(-2)}-` +
+                    // `${('0' + removeDomainsDate.getDate()).slice(-2)}`
                     for(let domain of domains) {
                         let report = {
                             timestamp: curr_time,
@@ -83,6 +89,10 @@ exports.listenMessages = async (channel) => {
                     }
                     const json_cb_feed = JSON.stringify(cb_json)
                     await fsPromises.writeFile(dateToFilename(registeredDate) + '.json', json_cb_feed)
+                    await fsPromises.writeFile(path.join(__dirname, '..', 'data', 'babydomains.feed'), json_cb_feed)
+                    // if (fs.existsSync(writePathZip)) {
+
+                    // }
                     logger.info(`JSON file for the date ${regDateString} created`)
                     // Object.entries(domains).forEach(([key, value]) => {
                     //     console.log(`${key}: ${value}`);
