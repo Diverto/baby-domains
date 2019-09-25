@@ -33,18 +33,18 @@
     "@google-cloud/logging-winston": "^2.0.1",
     "amqplib": "^0.5.5",
     "cron": "^1.7.2",
-    "mongoose": "^5.7.0",
+    "mongoose": "^5.7.1",
     "validator": "^11.1.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "codecov": "^3.5.0",
+    "codecov": "^3.6.1",
     "env-cmd": "^10.0.1",
-    "eslint": "^6.3.0",
+    "eslint": "^6.4.0",
     "husky": "^3.0.5",
     "jest": "^24.9.0",
-    "lint-staged": "^9.2.5",
+    "lint-staged": "^9.3.0",
     "nodemon": "^1.19.2",
-    "snyk": "^1.226.1"
+    "snyk": "^1.228.5"
   }
 }
