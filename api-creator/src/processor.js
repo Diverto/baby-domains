@@ -68,9 +68,9 @@ exports.listenMessages = async (channel) => {
                     const regDateString = `${registeredDate.getFullYear()}-` +
                     `${('0' + (registeredDate.getMonth() + 1)).slice(-2)}-` +
                     `${('0' + registeredDate.getDate()).slice(-2)}`
-                    // const removeDomainsDateString = `${removeDomainsDate.getFullYear()}-` +
-                    // `${('0' + (removeDomainsDate.getMonth() + 1)).slice(-2)}-` +
-                    // `${('0' + removeDomainsDate.getDate()).slice(-2)}`
+                    const removeDomainsDateString = `${removeDomainsDate.getFullYear()}-` +
+                    `${('0' + (removeDomainsDate.getMonth() + 1)).slice(-2)}-` +
+                    `${('0' + removeDomainsDate.getDate()).slice(-2)}`
                     for(let domain of domains) {
                         let report = {
                             timestamp: curr_time,
@@ -87,12 +87,24 @@ exports.listenMessages = async (channel) => {
                         }
                         cb_json.reports.push(report)
                     }
-                    const json_cb_feed = JSON.stringify(cb_json)
+                    let json_cb_feed = JSON.stringify(cb_json) 
                     await fsPromises.writeFile(dateToFilename(registeredDate) + '.json', json_cb_feed)
+                    if (fs.existsSync(dateToFilename(removeDomainsDate) + '.json')) {
+                        const jsonFile = await fsPromises.readFile(dateToFilename(removeDomainsDate) + '.json')
+                        let json_rm_feed = JSON.parse(jsonFile)
+                        logger.info(`Number of reports to be nulled for date ` +
+                        `${removeDomainsDateString}: ${json_rm_feed.reports.length}`)
+                        json_rm_feed.reports = json_rm_feed.reports.map((report) => { 
+                            repNew = report
+                            repNew.score = 0 
+                            repNew.timestamp = curr_time
+                            return repNew
+                        })
+                        cb_json.reports = cb_json.reports.concat(json_rm_feed.reports)
+                        json_cb_feed = JSON.stringify(cb_json)
+                    }
+                         
                     await fsPromises.writeFile(path.join(__dirname, '..', 'data', 'babydomains.feed'), json_cb_feed)
-                    // if (fs.existsSync(writePathZip)) {
-
-                    // }
                     logger.info(`JSON file for the date ${regDateString} created`)
                     // Object.entries(domains).forEach(([key, value]) => {
                     //     console.log(`${key}: ${value}`);
