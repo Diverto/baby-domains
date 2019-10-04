@@ -1,15 +1,12 @@
 {
-  "name": "crawler",
+  "name": "api-creator",
   "version": "1.0.0",
-  "description": "",
+  "description": "Creation of json file to be consumed by CarbonBlack",
   "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
   "scripts": {
     "start": "node src/index.js",
     "start:ci": "nodemon src/index.js",
-    "dev": "env-cmd -f .env.local nodemon src/index.js",
+    "dev": "env-cmd -f .env.local node src/index.js",
     "lint-staged": "lint-staged",
     "test:dev": "env-cmd -f .env jest ",
     "test:coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
@@ -30,42 +27,24 @@
       "pre-commit": "lint-staged"
     }
   },
-  "keywords": [],
   "author": "Tomislav Andros",
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@google-cloud/logging-winston": "^2.0.1",
-    "acorn": "^7.1.0",
-    "ajv": "^6.10.2",
     "amqplib": "^0.5.5",
-    "cheerio": "^1.0.0-rc.3",
-<<<<<<< HEAD
-    "cron": "^1.7.1",
-=======
     "cron": "^1.7.2",
->>>>>>> 0587dd4633bf8e0c022f67b9f0b92bb68ec3e3df
-    "env-cmd": "^10.0.1",
-    "is-html": "^2.0.0",
-    "mongodb": "^3.3.2",
     "mongoose": "^5.7.1",
-    "p-event": "^4.1.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4",
-    "rewire": "^4.0.1",
-    "unzipper": "^0.10.5",
     "validator": "^11.1.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
     "codecov": "^3.6.1",
-    "coveralls": "^3.0.6",
-    "cross-env": "^6.0.0",
+    "env-cmd": "^10.0.1",
     "eslint": "^6.4.0",
     "husky": "^3.0.5",
     "jest": "^24.9.0",
     "lint-staged": "^9.3.0",
     "nodemon": "^1.19.2",
-    "snyk": "^1.228.5",
-    "stream-mock": "^2.0.5"
+    "snyk": "^1.228.5"
   }
 }
