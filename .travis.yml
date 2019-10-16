@@ -42,3 +42,7 @@ deploy:
   script: bash ./deploy.sh
   on:
     branch: master
+
+notifications:
+  slack:
+    secure: Pbad+PsZQBma9En/vguwfupWyD31wRCWrQkCCBtQ7L+zFaREvwYR/QuX/BPB357QbwqQdjwXR7gAA4NN9escB3pJehSixlo/DyQHxiX206zxin4ztriHLeM6uo2kNHSxqJAK+GTALGguIKfFGEpMWF8mzWfuJjsaKDbFc+F1s9J/eO28qgSF1M3/a7njTro50plqKSPt+z7V7gxnk+N+BdjJMJ6IvWe9sXwFszNPvfAhgFUXNo7+iPdqMEGnl2MygNUlPCLSfQ0a6xCAvfOPH5aptXd1xTss1Sj0tlK6rg37SyeV+gmiHgRFcA0txZ5Px2/DriwNdjjXO9XPtQnSVUAvXYsjJmCNQ77sZINQv/IL6IfjeHm51VRpSn5Yd6DgVQ/Opy42iihfOKnQdsl5cWJaIWgz8z1IDveh88xQw8tqCZ1Jc4sKq4gunOgx/qQShRxKLwnB2Bdcn3nroQTx/COSy6DIkvwO46wVMNZIV7eX5oiCttvKOjbUCoZyhcyEdEoDwVaQQg61Zw48W8jR63Wf/biZxivH51PXCNYUJt3tTgiQvDAGFWLmiS+wTYdwUpG+mrBdjLc7sb8q6KGrPkzi0Bemka3EwfTUJcAkWHIjHK4jfDxJnexToe+rKn1j1IpvsN+1QYsQ0Ffn4x/vwiPMSnsGi98Z9/iMZgNzWlI=
