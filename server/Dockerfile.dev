@@ -8,10 +8,9 @@ RUN apt-get install -y curl
 RUN apt-get install -y mercurial
 
 COPY package.json .
-RUN npm install
-RUN npm install -g snyk
-RUN rm package-lock.json
 COPY package-lock.json .
+RUN npm ci
+RUN npm install -g snyk
 
 COPY . .
 
