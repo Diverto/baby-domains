@@ -25,6 +25,9 @@
       "env-cmd -f .env jest --bail --findRelatedTests"
     ]
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
