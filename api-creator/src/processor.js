@@ -26,6 +26,17 @@ const dateToFilename = (dateRegistered = '') => {
 }
 
 /**
+ * function that cleans database for older dates than retention policy
+ * @param {Date} cleaningDate - upper date for database cleaning
+ */ 
+const cleanDb = async(cleaningDate) => {
+    logger.debug(`Removing old data from db from date: ${cleaningDate}`)
+    const cleanedEntries = await BabyDomain.deleteMany({'dateRegistered': 
+        {$lte: cleaningDate}})
+    logger.info(`Number of cleaned entries: ${cleanedEntries.deletedCount}`)
+}
+
+/**
  * function that consumes channel that notifies when crawling
  * and putting domains to db is done
  * @param {object} ch - RabbitMQ channel
@@ -65,6 +76,8 @@ exports.listenMessages = async (channel) => {
                     // date for which retention policy is applied
                     let removeDomainsDate = new Date(data.dateRegistered)
                     removeDomainsDate.setDate(removeDomainsDate.getDate() - retentionPolicy)
+                    // clean old data
+                    await cleanDb(removeDomainsDate)
                     const regDateString = `${registeredDate.getFullYear()}-` +
                     `${('0' + (registeredDate.getMonth() + 1)).slice(-2)}-` +
                     `${('0' + registeredDate.getDate()).slice(-2)}`
@@ -95,7 +108,7 @@ exports.listenMessages = async (channel) => {
                         logger.info(`Number of reports to be nulled for date ` +
                         `${removeDomainsDateString}: ${json_rm_feed.reports.length}`)
                         json_rm_feed.reports = json_rm_feed.reports.map((report) => { 
-                            repNew = report
+                            const repNew = report
                             repNew.score = 0 
                             repNew.timestamp = curr_time
                             return repNew
