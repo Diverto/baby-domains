@@ -54,7 +54,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "rewire": "^4.0.1",
-    "snyk": "^1.235.0",
+    "snyk": "^1.235.1",
     "unzipper": "^0.10.5",
     "validator": "^11.1.0",
     "winston": "^3.2.1"
