@@ -11,7 +11,7 @@ RUN npm install -g snyk
 COPY package.json .
 COPY .snyk .
 RUN npm install
-#RUN npm run snyk-protect
+RUN npm run snyk-protect
 
 
 COPY . .
