@@ -13,7 +13,10 @@
     "test:codecov": "jest --coverage",
     "test:prod": "jest --bail",
     "snyk:test": "snyk test",
-    "snyk:monitor": "snyk monitor"
+    "snyk:monitor": "snyk monitor",
+    "test": "snyk test",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "lint-staged": {
     "*.js": [
@@ -37,6 +40,7 @@
     "amqplib": "^0.5.5",
     "cron": "^1.7.2",
     "mongoose": "^5.7.5",
+    "snyk": "^1.235.0",
     "validator": "^11.1.0",
     "winston": "^3.2.1"
   },
@@ -47,7 +51,7 @@
     "husky": "^3.0.9",
     "jest": "^24.9.0",
     "lint-staged": "^9.4.2",
-    "nodemon": "^1.19.4",
-    "snyk": "^1.235.0"
-  }
+    "nodemon": "^1.19.4"
+  },
+  "snyk": true
 }

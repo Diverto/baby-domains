@@ -16,7 +16,10 @@
     "test:codecov": "jest --coverage",
     "test:prod": "jest --bail",
     "snyk:test": "snyk test",
-    "snyk:monitor": "snyk monitor"
+    "snyk:monitor": "snyk monitor",
+    "test": "snyk test",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "lint-staged": {
     "*.js": [
@@ -51,6 +54,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "rewire": "^4.0.1",
+    "snyk": "^1.235.0",
     "unzipper": "^0.10.5",
     "validator": "^11.1.0",
     "winston": "^3.2.1"
@@ -64,7 +68,7 @@
     "jest": "^24.9.0",
     "lint-staged": "^9.4.2",
     "nodemon": "^1.19.4",
-    "snyk": "^1.235.0",
     "stream-mock": "^2.0.5"
-  }
+  },
+  "snyk": true
 }
