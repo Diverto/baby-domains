@@ -67,3 +67,4 @@ tags.temp
 
 # ignore data folders
 data/
+testdata/

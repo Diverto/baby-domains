@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crawler-deployment
+  name: api-creator-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      component: crawler
+      component: api-creator
   template:
     metadata:
       labels:
-        component: crawler
+        component: api-creator
     spec:
       dnsPolicy: Default
       containers:
-        - name: crawler
-          image: tandrosdiv/baby-crawler
+        - name: api-creator
+          image: tandrosdiv/baby-api-creator
           env: 
             - name: MONGOPROTOCOL
               valueFrom: 

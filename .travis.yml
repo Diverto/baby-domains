@@ -16,29 +16,34 @@ before_install:
   - gcloud config set compute/zone europe-west3-c
   - gcloud container clusters get-credentials baby-cluster
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker build -t tandrosdiv/baby-api -f ./server/Dockerfile.dev ./server
-  - docker build -t tandrosdiv/baby-crawler -f ./crawler/Dockerfile.dev ./crawler
+  - docker build -t tandrosdiv/baby-api:test -f ./server/Dockerfile.dev ./server
+  - docker build -t tandrosdiv/baby-crawler:test -f ./crawler/Dockerfile.dev ./crawler
 
 script:
+  - docker run -e CI=true tandrosdiv/baby-crawler:test /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:test"
+  - docker run -e CI=true tandrosdiv/baby-api:test /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:test"
   # regression test
-  - docker run -e CI=true tandrosdiv/baby-api npm run test
-  - docker run -e CI=true tandrosdiv/baby-crawler npm run test:prod
+  - docker run -e CI=true tandrosdiv/baby-api:test npm run test:prod
+  - docker run -e CI=true tandrosdiv/baby-crawler:test npm run test:prod
   # - docker run -e CI=true tandrosdiv/baby-crawler /app/node_modules/.bin/snyk auth "$SNYK_TOKEN" 
-  - docker run -e CI=true tandrosdiv/baby-crawler /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:test"
-  - docker run -e CI=true tandrosdiv/baby-api /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:test"
+  
 
   - >
-    docker run -e CI=true -v "$PWD/coverage:/app/coverage" tandrosdiv/baby-crawler 
+    docker run -e CI=true -v "$PWD/coverage:/app/coverage" tandrosdiv/baby-crawler:test 
     /bin/bash -c "npm run test:codecov"
   - bash <(curl -s https://codecov.io/env)
   - bash <(curl -s https://codecov.io/bash) 
 
 after_success:
-  - docker run -e CI=true tandrosdiv/baby-crawler /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:monitor"
-  - docker run -e CI=true tandrosdiv/baby-api /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:monitor"
+  - docker run -e CI=true tandrosdiv/baby-crawler:test /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:monitor"
+  - docker run -e CI=true tandrosdiv/baby-api:test /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:monitor"
  
 deploy:
   provider: script
   script: bash ./deploy.sh
   on:
     branch: master
+
+notifications:
+  slack:
+    secure: Pbad+PsZQBma9En/vguwfupWyD31wRCWrQkCCBtQ7L+zFaREvwYR/QuX/BPB357QbwqQdjwXR7gAA4NN9escB3pJehSixlo/DyQHxiX206zxin4ztriHLeM6uo2kNHSxqJAK+GTALGguIKfFGEpMWF8mzWfuJjsaKDbFc+F1s9J/eO28qgSF1M3/a7njTro50plqKSPt+z7V7gxnk+N+BdjJMJ6IvWe9sXwFszNPvfAhgFUXNo7+iPdqMEGnl2MygNUlPCLSfQ0a6xCAvfOPH5aptXd1xTss1Sj0tlK6rg37SyeV+gmiHgRFcA0txZ5Px2/DriwNdjjXO9XPtQnSVUAvXYsjJmCNQ77sZINQv/IL6IfjeHm51VRpSn5Yd6DgVQ/Opy42iihfOKnQdsl5cWJaIWgz8z1IDveh88xQw8tqCZ1Jc4sKq4gunOgx/qQShRxKLwnB2Bdcn3nroQTx/COSy6DIkvwO46wVMNZIV7eX5oiCttvKOjbUCoZyhcyEdEoDwVaQQg61Zw48W8jR63Wf/biZxivH51PXCNYUJt3tTgiQvDAGFWLmiS+wTYdwUpG+mrBdjLc7sb8q6KGrPkzi0Bemka3EwfTUJcAkWHIjHK4jfDxJnexToe+rKn1j1IpvsN+1QYsQ0Ffn4x/vwiPMSnsGi98Z9/iMZgNzWlI=
