@@ -27,7 +27,7 @@ script:
   # regression test
   - docker run -e CI=true tandrosdiv/baby-api:test npm run test:prod
   - docker run -e CI=true tandrosdiv/baby-crawler:test npm run test:prod
-  - docker run -e CI=true tandrosdiv/baby-api-creator:test npm run test:prod
+  # - docker run -e CI=true tandrosdiv/baby-api-creator:test npm run test:prod
   # - docker run -e CI=true tandrosdiv/baby-crawler /app/node_modules/.bin/snyk auth "$SNYK_TOKEN" 
   
 
@@ -37,11 +37,11 @@ script:
   - bash <(curl -s https://codecov.io/env)
   - bash <(curl -s https://codecov.io/bash)
   # - rm -r $PWD/coverage 
-  - >
-    docker run -e CI=true -v "$PWD/coverage:/app/coverage" tandrosdiv/baby-api-creator:test 
-    /bin/bash -c "npm run test:codecov"
-  - bash <(curl -s https://codecov.io/env)
-  - bash <(curl -s https://codecov.io/bash) 
+  # - >
+  #   docker run -e CI=true -v "$PWD/coverage:/app/coverage" tandrosdiv/baby-api-creator:test 
+  #   /bin/bash -c "npm run test:codecov"
+  # - bash <(curl -s https://codecov.io/env)
+  # - bash <(curl -s https://codecov.io/bash) 
 
 after_success:
   - docker run -e CI=true tandrosdiv/baby-crawler:test /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:monitor"
