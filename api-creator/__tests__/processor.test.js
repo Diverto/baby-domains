@@ -7,6 +7,7 @@ const { cloudamqpConnectionString } = require('../src/keys')
 let channel
 let connection
 beforeAll(async () => {
+    console.log(`${ cloudamqpConnectionString }`)
     connection = await amqp.connect(cloudamqpConnectionString);
     channel = await connection.createChannel();
 })
