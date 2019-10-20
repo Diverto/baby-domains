@@ -33,7 +33,7 @@ const publishMessage = require('./util').publishMessage
                 throw new Error(`* crawler/cronjob: ${error}`)
             }
 
-        }, null, true, 'Europe/Vienna');
+        }, null, true, 'Europe/Vienna', undefined, true);
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
         logger.error(`* crawler/main: ${error}`)
