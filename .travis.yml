@@ -36,7 +36,7 @@ script:
     /bin/bash -c "npm run test:codecov"
   - bash <(curl -s https://codecov.io/env)
   - bash <(curl -s https://codecov.io/bash)
-  - rm -r $PWD/coverage 
+  # - rm -r $PWD/coverage 
   - >
     docker run -e CI=true -v "$PWD/coverage:/app/coverage" tandrosdiv/baby-api-creator:test 
     /bin/bash -c "npm run test:codecov"
