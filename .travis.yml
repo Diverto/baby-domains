@@ -18,13 +18,16 @@ before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker build -t tandrosdiv/baby-api:test -f ./server/Dockerfile.dev ./server
   - docker build -t tandrosdiv/baby-crawler:test -f ./crawler/Dockerfile.dev ./crawler
+  - docker build -t tandrosdiv/baby-api-creator:test -f ./api-creator/Dockerfile.dev ./api-creator
 
 script:
   - docker run -e CI=true tandrosdiv/baby-crawler:test /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:test"
   - docker run -e CI=true tandrosdiv/baby-api:test /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:test"
+  - docker run -e CI=true tandrosdiv/baby-api-creator:test /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:test"
   # regression test
   - docker run -e CI=true tandrosdiv/baby-api:test npm run test:prod
   - docker run -e CI=true tandrosdiv/baby-crawler:test npm run test:prod
+  # - docker run -e CI=true tandrosdiv/baby-api-creator:test npm run test:prod
   # - docker run -e CI=true tandrosdiv/baby-crawler /app/node_modules/.bin/snyk auth "$SNYK_TOKEN" 
   
 
@@ -32,11 +35,18 @@ script:
     docker run -e CI=true -v "$PWD/coverage:/app/coverage" tandrosdiv/baby-crawler:test 
     /bin/bash -c "npm run test:codecov"
   - bash <(curl -s https://codecov.io/env)
-  - bash <(curl -s https://codecov.io/bash) 
+  - bash <(curl -s https://codecov.io/bash)
+  # - rm -r $PWD/coverage 
+  # - >
+  #   docker run -e CI=true -v "$PWD/coverage:/app/coverage" tandrosdiv/baby-api-creator:test 
+  #   /bin/bash -c "npm run test:codecov"
+  # - bash <(curl -s https://codecov.io/env)
+  # - bash <(curl -s https://codecov.io/bash) 
 
 after_success:
   - docker run -e CI=true tandrosdiv/baby-crawler:test /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:monitor"
   - docker run -e CI=true tandrosdiv/baby-api:test /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:monitor"
+  - docker run -e CI=true tandrosdiv/baby-api-creator /bin/bash -c "snyk auth $SNYK_TOKEN && npm run snyk:monitor"
  
 deploy:
   provider: script
