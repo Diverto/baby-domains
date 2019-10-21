@@ -3,7 +3,8 @@
     "default": {
       "packages": [
         "crawler/package.json",
-        "server/package.json"
+        "server/package.json",
+        "api-creator/package.json"
       ]
     }
   }
