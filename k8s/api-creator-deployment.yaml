@@ -57,6 +57,11 @@ spec:
                 secretKeyRef:
                   name: cloudamqp-url
                   key: CLOUDAMQP_URL
+            - name: RETENTION_POLICY
+              valueFrom: 
+                secretKeyRef:
+                  name: retentionpolicy
+                  key: RETENTION_POLICY
           # resources:
           #   limits:
           #     memory: "512Mi"
