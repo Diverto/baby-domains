@@ -13,9 +13,16 @@ spec:
         component: server
     spec:
       dnsPolicy: Default
+      volumes:
+        - name: cb-pv
+          persistentVolumeClaim:
+            claimName: cbapi-persistent-volume-claim
       containers:
         - name : server
           image: tandrosdiv/baby-api
+          volumeMounts:
+            - name: cb-pv
+              mountPath: "/app/public"
           ports:
             - containerPort: 5000
           env:
