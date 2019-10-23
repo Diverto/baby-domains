@@ -22,7 +22,7 @@ spec:
           image: tandrosdiv/baby-api-creator
           volumeMounts:
             - name: cb-pv
-              mountPath: "/app/data"
+              mountPath: "/app/public"
           env: 
             - name: MONGOPROTOCOL
               valueFrom: 
