@@ -2,7 +2,12 @@ const express = require('express')
 const mongoConnect = require('./db/mongoose').mongoConnect
 // const domainRouter = require('./routers/domains')
 
+const publicDirectoryPath = path.join(__dirname, '../public')
+
 const app = express()
+
+// setup static dir to serve
+app.use(express.static(publicDirectoryPath))
 
 app.get('/', (req, res) => {
     res.send('Hi');

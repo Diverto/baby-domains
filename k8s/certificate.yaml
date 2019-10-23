@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: babycbfeed-diverto-hr-tls
+spec:
+  secretName: babycbfeed-diverto-hr
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: babycbfeed.diverto.hr
+  dnsNames:
+    - babycbfeed.diverto.hr
+  acme:
+    config:
+      - http01:
+          ingressClass: nginx
+        domains:
+          - babycbfeed.diverto.hr

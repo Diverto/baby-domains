@@ -115,9 +115,11 @@ exports.listenMessages = async (channel) => {
                         })
                         cb_json.reports = cb_json.reports.concat(json_rm_feed.reports)
                         json_cb_feed = JSON.stringify(cb_json)
+                        //delete old json file
+                        fs.unlinkSync(dateToFilename(removeDomainsDate) + '.json')
                     }
                          
-                    await fsPromises.writeFile(path.join(__dirname, '..', 'data', 'babydomains.feed'), json_cb_feed)
+                    await fsPromises.writeFile(path.join(__dirname, '..', 'public', 'babydomains.feed'), json_cb_feed)
                     logger.info(`JSON file for the date ${regDateString} created`)
                     // Object.entries(domains).forEach(([key, value]) => {
                     //     console.log(`${key}: ${value}`);

@@ -13,9 +13,16 @@ spec:
         component: api-creator
     spec:
       dnsPolicy: Default
+      volumes:
+        - name: cb-pv
+          persistentVolumeClaim:
+            claimName: cbapi-persistent-volume-claim
       containers:
         - name: api-creator
           image: tandrosdiv/baby-api-creator
+          volumeMounts:
+            - name: cb-pv
+              mountPath: "/app/public"
           env: 
             - name: MONGOPROTOCOL
               valueFrom: 
@@ -62,6 +69,7 @@ spec:
                 secretKeyRef:
                   name: retentionpolicy
                   key: RETENTION_POLICY
+        
           # resources:
           #   limits:
           #     memory: "512Mi"
