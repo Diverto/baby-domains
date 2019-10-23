@@ -12,6 +12,7 @@ spec:
     path: "/"
 
 ---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: cbapi-persistent-volume-claim
