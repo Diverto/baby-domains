@@ -8,5 +8,8 @@ spec:
     email: 'tomo@diverto.hr'
     privateKeySecretRef:
       name: letsencrypt-prod
-    http01: {}
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
     
