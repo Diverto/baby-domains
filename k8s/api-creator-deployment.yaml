@@ -13,6 +13,7 @@ spec:
         component: api-creator
     spec:
       dnsPolicy: Default
+      # volume
       volumes:
         - name: cb-pv
           persistentVolumeClaim:
