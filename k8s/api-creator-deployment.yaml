@@ -16,7 +16,7 @@ spec:
       volumes:
         - name: cb-pv
           persistentVolumeClaim:
-            claimName: cbapi-persistent-volume-claim
+            claimName: nfs
       containers:
         - name: api-creator
           image: tandrosdiv/baby-api-creator
