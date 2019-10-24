@@ -13,10 +13,11 @@ spec:
         component: api-creator
     spec:
       dnsPolicy: Default
+      # volume
       volumes:
         - name: cb-pv
           persistentVolumeClaim:
-            claimName: cbapi-persistent-volume-claim
+            claimName: nfs
       containers:
         - name: api-creator
           image: tandrosdiv/baby-api-creator
