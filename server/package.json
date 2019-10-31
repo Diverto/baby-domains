@@ -46,7 +46,7 @@
     "codecov": "^3.6.1",
     "cross-env": "^6.0.3",
     "env-cmd": "^10.0.1",
-    "eslint": "^6.5.1",
+    "eslint": "^6.6.0",
     "husky": "^3.0.9",
     "jest": "^24.9.0",
     "lint-staged": "^9.4.2",
@@ -56,9 +56,9 @@
   "dependencies": {
     "@google-cloud/logging-winston": "^3.0.0",
     "express": "^4.17.1",
-    "mongoose": "^5.7.6",
-    "snyk": "^1.236.1",
-    "validator": "^11.1.0",
+    "mongoose": "^5.7.7",
+    "snyk": "^1.240.2",
+    "validator": "^12.0.0",
     "winston": "^3.2.1"
   },
   "snyk": true
