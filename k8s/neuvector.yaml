@@ -25,7 +25,7 @@ spec:
     - port: 8443
       name: manager
       protocol: TCP
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: neuvector-allinone-pod
 
