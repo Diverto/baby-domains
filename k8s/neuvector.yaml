@@ -1,3 +1,4 @@
+#3.0.0.b3
 apiVersion: v1
 kind: Service
 metadata:
