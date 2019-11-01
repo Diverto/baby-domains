@@ -47,7 +47,7 @@ spec:
   - port: 18301
     protocol: "UDP"
     name: "cluster-udp-18301"
-  # clusterIP: None
+  clusterIP: None
   selector:
     app: neuvector-allinone-pod
 
