@@ -1,6 +1,55 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: neuvector-service-controller-fed-master
+  namespace: neuvector
+spec:
+  ports:
+  - port: 11443
+    name: fed
+    protocol: TCP
+  type: LoadBalancer
+  selector:
+    app: neuvector-controller-pod
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: neuvector-service-controller-fed-worker
+  namespace: neuvector
+spec:
+  ports:
+  - port: 10443
+    name: fed
+    protocol: TCP
+  type: LoadBalancer
+  selector:
+    app: neuvector-controller-pod
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: neuvector-svc-crd-webhook
+  namespace: neuvector
+spec:
+  ports:
+  - port: 443
+    targetPort: 30443
+    protocol: TCP
+    name: crd-webhook
+  type: ClusterIP
+  selector:
+    app: neuvector-controller-pod
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
   name: neuvector-svc-admission-webhook
   namespace: neuvector
 spec:
@@ -11,7 +60,7 @@ spec:
     name: admission-webhook
   type: ClusterIP
   selector:
-    app: neuvector-allinone-pod
+    app: neuvector-controller-pod
 
 ---
 
@@ -27,14 +76,14 @@ spec:
       protocol: TCP
   type: LoadBalancer
   selector:
-    app: neuvector-allinone-pod
+    app: neuvector-manager-pod
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: neuvector-svc-allinone
+  name: neuvector-svc-controller
   namespace: neuvector
 spec:
   ports:
@@ -49,32 +98,75 @@ spec:
     name: "cluster-udp-18301"
   clusterIP: None
   selector:
-    app: neuvector-allinone-pod
+    app: neuvector-controller-pod
 
 ---
 
-apiVersion: extensions/v1beta1
-kind: DaemonSet
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: neuvector-allinone-pod
+  name: neuvector-manager-pod
   namespace: neuvector
 spec:
-  minReadySeconds: 60
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: neuvector-manager-pod
+  replicas: 1
   template:
     metadata:
       labels:
-        app: neuvector-allinone-pod
+        app: neuvector-manager-pod
     spec:
       imagePullSecrets:
         - name: regsecret
-      hostPID: true
       containers:
-        - name: neuvector-allinone-pod
-          image: neuvector/allinone
+        - name: neuvector-manager-pod
+          image: neuvector/manager
+          env:
+            - name: CTRL_SERVER_IP
+              value: neuvector-svc-controller.neuvector
+      restartPolicy: Always
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neuvector-controller-pod
+  namespace: neuvector
+spec:
+  selector:
+    matchLabels:
+      app: neuvector-controller-pod
+  minReadySeconds: 60
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: neuvector-controller-pod
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - neuvector-controller-pod
+              topologyKey: "kubernetes.io/hostname"
+      imagePullSecrets:
+        - name: regsecret
+      containers:
+        - name: neuvector-controller-pod
+          image: neuvector/controller
           securityContext:
             privileged: true
           readinessProbe:
@@ -86,7 +178,7 @@ spec:
             periodSeconds: 5
           env:
             - name: CLUSTER_JOIN_ADDR
-              value: neuvector-svc-allinone.neuvector
+              value: neuvector-svc-controller.neuvector
             - name: CLUSTER_ADVERTISED_ADDR
               valueFrom:
                 fieldRef:
@@ -96,9 +188,6 @@ spec:
                 fieldRef:
                   fieldPath: status.podIP
           volumeMounts:
-            - mountPath: /lib/modules
-              name: modules-vol
-              readOnly: true
             - mountPath: /var/neuvector
               name: nv-share
               readOnly: false
@@ -120,13 +209,8 @@ spec:
                 # SIGTERM triggers a quick exit; gracefully terminate instead
                 command: ["/usr/local/bin/consul", "leave"]
       terminationGracePeriodSeconds: 60
-      nodeSelector:
-        nvallinone: "true"
       restartPolicy: Always
       volumes:
-        - name: modules-vol
-          hostPath:
-            path: /lib/modules
         - name: nv-share
           hostPath:
             path: /var/neuvector
@@ -146,12 +230,15 @@ spec:
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: neuvector-enforcer-pod
   namespace: neuvector
 spec:
+  selector:
+    matchLabels:
+      app: neuvector-enforcer-pod
   updateStrategy:
     type: RollingUpdate
   template:
@@ -162,14 +249,6 @@ spec:
       tolerations:
         - effect: NoSchedule
           key: node-role.kubernetes.io/master
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                - key: "nvallinone"
-                  operator: NotIn
-                  values: ["true"]
       imagePullSecrets:
         - name: regsecret
       hostPID: true
@@ -180,7 +259,7 @@ spec:
             privileged: true
           env:
             - name: CLUSTER_JOIN_ADDR
-              value: neuvector-svc-allinone.neuvector
+              value: neuvector-svc-controller.neuvector
             - name: CLUSTER_ADVERTISED_ADDR
               valueFrom:
                 fieldRef:
