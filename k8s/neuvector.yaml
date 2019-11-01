@@ -121,7 +121,7 @@ spec:
         - name: regsecret
       containers:
         - name: neuvector-manager-pod
-          image: neuvector/manager
+          image: neuvector/manager:3.0.0.b3
           env:
             - name: CTRL_SERVER_IP
               value: neuvector-svc-controller.neuvector
@@ -166,7 +166,7 @@ spec:
         - name: regsecret
       containers:
         - name: neuvector-controller-pod
-          image: neuvector/controller
+          image: neuvector/controller:3.0.0.b3
           securityContext:
             privileged: true
           readinessProbe:
@@ -254,7 +254,7 @@ spec:
       hostPID: true
       containers:
         - name: neuvector-enforcer-pod
-          image: neuvector/enforcer
+          image: neuvector/enforcer:3.0.0.b3
           securityContext:
             privileged: true
           env:
