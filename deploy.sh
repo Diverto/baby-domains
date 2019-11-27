@@ -2,7 +2,7 @@ docker build -t tandrosdiv/baby-api:latest -t tandrosdiv/baby-api:$SHA -f ./serv
 docker build -t tandrosdiv/baby-crawler:latest -t tandrosdiv/baby-crawler:$SHA -f ./crawler/Dockerfile ./crawler
 docker build -t tandrosdiv/baby-api-creator:latest -t tandrosdiv/baby-api-creator:$SHA -f ./api-creator/Dockerfile ./api-creator
 
-# push to Docker Hub
+# push to Docker Hub #2
 docker push tandrosdiv/baby-api:latest
 docker push tandrosdiv/baby-crawler:latest
 docker push tandrosdiv/baby-api-creator:latest
