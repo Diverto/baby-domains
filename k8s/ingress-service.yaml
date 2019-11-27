@@ -20,7 +20,7 @@ spec:
             backend: 
               serviceName: server-cluster-ip-service
               servicePort: 5000
-          - path: /monitoring/?(.*)
-            backend: 
-              serviceName: neuvector-service-webui
-              servicePort: 8443
+          # - path: /monitoring/?(.*)
+          #   backend: 
+          #     serviceName: neuvector-service-webui
+          #     servicePort: 8443
