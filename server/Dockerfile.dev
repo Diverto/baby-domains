@@ -10,14 +10,14 @@ RUN apk add git
 RUN apk add curl
 RUN apk add mercurial
 
-RUN npm install -g snyk
+# RUN npm install -g snyk
 COPY ./package*.json ./
-COPY .snyk .
+# COPY .snyk .
 
 USER node
 
 RUN npm install
-RUN npm run snyk-protect
+# RUN npm run snyk-protect
 
 COPY --chown=node:node . .
 
