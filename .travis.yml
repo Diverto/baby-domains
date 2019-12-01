@@ -6,6 +6,16 @@ env:
     - SHA=$(git rev-parse HEAD) 
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 
+branches:
+  only:
+    - master
+    - /^deploy-.*$/
+
+stages:
+  - name: deploy
+    # require the branch name to be master (note for PRs this is the base branch name)
+    if: branch = /^deploy-.*$/
+
 before_install:
   - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in baby-domains-249012-53cfe28387fb.json.enc -out baby-domains-249012-53cfe28387fb.json -d
   - curl https://sdk.cloud.google.com | bash > /dev/null
@@ -16,6 +26,8 @@ before_install:
   - gcloud config set compute/zone europe-west3-c
   - gcloud container clusters get-credentials baby-cluster
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  
+install:
   - docker build -t tandrosdiv/baby-api:test -f ./server/Dockerfile.dev ./server
   - docker build -t tandrosdiv/baby-crawler:test -f ./crawler/Dockerfile.dev ./crawler
   - docker build -t tandrosdiv/baby-api-creator:test -f ./api-creator/Dockerfile.dev ./api-creator
@@ -51,8 +63,8 @@ after_success:
 deploy:
   provider: script
   script: bash ./deploy.sh
-  on:
-    branch: master
+  # on:
+  #   branch: master
 
 notifications:
   slack:
