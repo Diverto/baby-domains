@@ -14,7 +14,7 @@ branches:
 stages:
   - name: deploy
     # require the branch name to be master (note for PRs this is the base branch name)
-    if: branch = /^deploy-.*$/
+    if: branch =~ ^deploy-.*$
 
 before_install:
   - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in baby-domains-249012-53cfe28387fb.json.enc -out baby-domains-249012-53cfe28387fb.json -d
