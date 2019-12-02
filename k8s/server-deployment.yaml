@@ -2,8 +2,12 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: server-deployment
+  labels:
+    component: server
 spec:
   replicas: 1
+  updateStrategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       component: server

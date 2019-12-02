@@ -15,6 +15,8 @@ metadata:
   name: api-creator-deployment
 spec:
   replicas: 1
+  updateStrategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       component: api-creator
