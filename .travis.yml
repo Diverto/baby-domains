@@ -59,8 +59,9 @@ deploy:
   provider: script
   script: bash ./deploy.sh
   on:
+    tags: true
     all_branches: true
-    condition: $TRAVIS_BRANCH =~ ^release\/.*$
+    condition: $TRAVIS_TAG =~ ^release\/.*$
 
 notifications:
   slack:
