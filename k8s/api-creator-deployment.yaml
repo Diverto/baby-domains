@@ -70,9 +70,8 @@ spec:
                 secretKeyRef:
                   name: retentionpolicy
                   key: RETENTION_POLICY
-        
-          # resources:
-          #   limits:
-          #     memory: "512Mi"
-          #     cpu: "200m"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
 
