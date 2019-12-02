@@ -5,6 +5,7 @@ metadata:
   labels:
     component: server
 spec:
+  serviceName: server
   replicas: 1
   updateStrategy:
     type: RollingUpdate
