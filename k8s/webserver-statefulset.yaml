@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: server
+  name: webserver
   labels:
-    component: server
+    component: webserver
 spec:
-  serviceName: server
+  serviceName: webserver
   replicas: 1
   updateStrategy:
     type: RollingUpdate
   selector:
     matchLabels:
-      component: server
+      component: webserver
   template:
     metadata:
       labels:
-        component: server
+        component: webserver
     spec:
       dnsPolicy: Default
       volumes:
@@ -23,7 +23,7 @@ spec:
           persistentVolumeClaim:
             claimName: nfs
       containers:
-        - name : server
+        - name : webserver
           image: tandrosdiv/baby-api
           volumeMounts:
             - name: cb-pv
