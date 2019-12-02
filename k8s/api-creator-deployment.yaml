@@ -12,7 +12,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: api-creator-deployment
+  name: api-creator
 spec:
   serviceName: api-creator
   replicas: 1
