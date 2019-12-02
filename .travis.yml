@@ -18,7 +18,7 @@ before_install:
   - gcloud components update kubectl 
   - gcloud auth activate-service-account --key-file baby-domains-249012-53cfe28387fb.json
   - gcloud config set project baby-domains-249012 
-  - gcloud config set compute/zone europe-west3-c
+  - gcloud config set compute/zone europe-west3-a
   - gcloud container clusters get-credentials baby-cluster
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   
