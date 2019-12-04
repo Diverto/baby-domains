@@ -58,7 +58,12 @@ if (envVar === 'development') {
     // Imports the Google Cloud client library for Winston
     const {LoggingWinston} = require('@google-cloud/logging-winston');
 
-    const loggingWinston = new LoggingWinston();
+    const loggingWinston = new LoggingWinston(
+        {
+            level: 'info',// log at 'warn' and above ,
+            logName: "server.log"
+        }
+    );
 
     // Create a Winston logger that streams to Stackdriver Logging
     // Logs will be written to: "projects/YOUR_PROJECT_ID/logs/winston_log"

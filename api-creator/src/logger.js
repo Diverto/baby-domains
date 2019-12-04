@@ -60,7 +60,7 @@ if (envVar === 'development') {
         {
         // projectId: 'baby-domains-249012',
         level: 'info',// log at 'warn' and above ,
-        logName: "baby-crawler.log"
+        logName: "api-creator.log"
         }
         );
 
