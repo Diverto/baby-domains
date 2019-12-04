@@ -18,7 +18,7 @@ spec:
         paths:
           - path: /api/?(.*)
             backend: 
-              serviceName: server-cluster-ip-service
+              serviceName: webserver-cluster-ip-service
               servicePort: 5000
           # - path: /monitoring/?(.*)
           #   backend: 
