@@ -44,7 +44,7 @@
   "homepage": "https://github.com/Diverto/baby-domains#readme",
   "devDependencies": {
     "codecov": "^3.6.1",
-    "cross-env": "^6.0.3",
+    "cross-env": "^7.0.0",
     "env-cmd": "^10.0.1",
     "eslint": "^6.7.2",
     "husky": "^3.1.0",
