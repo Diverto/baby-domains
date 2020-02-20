@@ -43,22 +43,22 @@
   },
   "homepage": "https://github.com/Diverto/baby-domains#readme",
   "devDependencies": {
-    "codecov": "^3.6.1",
-    "cross-env": "^6.0.3",
-    "env-cmd": "^10.0.1",
-    "eslint": "^6.7.2",
-    "husky": "^3.1.0",
-    "jest": "^24.9.0",
-    "lint-staged": "^9.5.0",
-    "mongodb": "^3.3.5",
-    "nodemon": "^2.0.1"
+    "codecov": "^3.6.5",
+    "cross-env": "^7.0.0",
+    "env-cmd": "^10.1.0",
+    "eslint": "^6.8.0",
+    "husky": "^4.2.3",
+    "jest": "^25.1.0",
+    "lint-staged": "^10.0.7",
+    "mongodb": "^3.5.3",
+    "nodemon": "^2.0.2"
   },
   "dependencies": {
-    "@google-cloud/logging-winston": "^3.0.0",
+    "@google-cloud/logging-winston": "^3.0.5",
     "express": "^4.17.1",
-    "mongoose": "^5.7.13",
-    "snyk": "^1.253.0",
-    "validator": "^12.1.0",
+    "mongoose": "^5.9.1",
+    "snyk": "^1.294.0",
+    "validator": "^12.2.0",
     "winston": "^3.2.1"
   },
   "snyk": true
