@@ -8,7 +8,7 @@ const logger = require('../logger')
  */
 exports.brokerSetup = async () => {
     try {
-        logger.info(`Setting up RabbitMQ Exchanges/Queues on ${cloudamqpConnectionString}`);
+        logger.info(`* api-creator.rabbitmq.brokerSetup: Setting up RabbitMQ Exchanges/Queues on ${cloudamqpConnectionString}`);
         // connect to RabbitMQ Instance
         const connection = await amqp.connect(cloudamqpConnectionString);
         // create a channel
@@ -20,12 +20,12 @@ exports.brokerSetup = async () => {
         // bind queues
         await channel.bindQueue(`${exchangeName}.${routingKey}`, exchangeName, routingKey);
     
-        logger.info("api-creator RabbitMQ setup/check completed");
+        logger.info("* api-creator.rabbitmq.brokerSetup: RabbitMQ setup/check completed");
         return { channel }
         // process.exit();
     } catch (e) {
         const error = `${e}`.replace(/Error:/gi, '>')
-        throw new Error(`* brokerSetup: ${error}`)
+        throw new Error(`* api-creator.rabbitmq.brokerSetup: ${error}`)
     }
 
 }

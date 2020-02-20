@@ -16,7 +16,7 @@ const path = require('path')
         await listenMessages(channel)
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
-        logger.error(`* api-creator/main: ${error}`)
+        logger.error(`* api-creator.index.main: ${error}`)
         process.exit(-1)
     }
 }()

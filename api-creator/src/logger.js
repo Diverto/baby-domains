@@ -59,7 +59,7 @@ if (envVar === 'development') {
     const loggingWinston = new LoggingWinston(
         {
         // projectId: 'baby-domains-249012',
-        level: 'info',// log at 'warn' and above ,
+        level: 'debug',// log at 'warn' and above ,
         logName: "api-creator.log"
         }
         );
@@ -67,7 +67,7 @@ if (envVar === 'development') {
     // Create a Winston logger that streams to Stackdriver Logging
     // Logs will be written to: "projects/YOUR_PROJECT_ID/logs/winston_log"
     logger = createLogger({
-      level: 'info',
+      level: 'debug',
       transports: [
         new transports.Console(),
         // Add Stackdriver Logging

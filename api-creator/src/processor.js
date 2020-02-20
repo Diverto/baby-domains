@@ -43,7 +43,7 @@ const cleanDb = async(cleaningDate) => {
  */
 exports.listenMessages = async (channel) => {
     try {
-        logger.debug('Executing api-creator/listenMessages function')
+        logger.debug('* api-creator.processor.listenMessages: Executing api-creator/listenMessages function')
         await channel.prefetch(1);
         channel.consume(`${exchangeName}.${routingKey}`, async (msg) => {
             if (msg != null) {
@@ -51,12 +51,12 @@ exports.listenMessages = async (channel) => {
                 const data = JSON.parse(msgBody);
                 if (data.status === "completed") {
                     const { db } = await mongoConnect()
-                    logger.debug(`Processing finished. Registered date: ${data.dateRegistered}`)
+                    logger.debug(`* api-creator.processor.listenMessages: Processing finished. Registered date: ${data.dateRegistered}`)
                     let upperDate = new Date(data.dateRegistered)
                     upperDate.setDate(upperDate.getDate() + 1)
                     const domains = await BabyDomain.find({'dateRegistered': 
                     {$gte: data.dateRegistered, $lte: upperDate}})
-                    logger.info(`Number of entries for ${data.dateRegistered}: 
+                    logger.info(`* api-creator.processor.listenMessages: Number of entries for ${data.dateRegistered}: 
                     ${Object.keys(domains).length}`)
                     let cb_json = {
                         feedinfo: {
@@ -105,7 +105,7 @@ exports.listenMessages = async (channel) => {
                     if (fs.existsSync(dateToFilename(removeDomainsDate) + '.json')) {
                         const jsonFile = await fsPromises.readFile(dateToFilename(removeDomainsDate) + '.json')
                         let json_rm_feed = JSON.parse(jsonFile)
-                        logger.info(`Number of reports to be nulled for date ` +
+                        logger.info(`* api-creator.processor.listenMessages: Number of reports to be nulled for date ` +
                         `${removeDomainsDateString}: ${json_rm_feed.reports.length}`)
                         json_rm_feed.reports = json_rm_feed.reports.map((report) => { 
                             const repNew = report
@@ -120,7 +120,7 @@ exports.listenMessages = async (channel) => {
                     }
                          
                     await fsPromises.writeFile(path.join(__dirname, '..', 'public', 'babydomains.feed'), json_cb_feed)
-                    logger.info(`JSON file for the date ${regDateString} created`)
+                    logger.info(`* api-creator.processor.listenMessages: JSON file for the date ${regDateString} created`)
                     // Object.entries(domains).forEach(([key, value]) => {
                     //     console.log(`${key}: ${value}`);
                     // }) 
@@ -131,6 +131,6 @@ exports.listenMessages = async (channel) => {
         }, {noAck: true})    
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
-        throw new Error(`* api-creator/listenMessages: ${error}`)
+        throw new Error(`* api-creator.processor.listenMessages: ${error}`)
     }
 }
