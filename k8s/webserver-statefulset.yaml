@@ -83,7 +83,7 @@ spec:
         - name: fix-permissions-for-nfs-share
           image: busybox:1.31
           imagePullPolicy: IfNotPresent
-          command: ['sh', '-c', 'chown', '-R', '1000:1000', '/app/public']
+          command: ['sh', '-c', 'chown -R 1000:1000 /app/public']
           securityContext:
             privileged: true
           terminationMessagePath: /dev/termination-log
