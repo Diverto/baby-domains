@@ -5,7 +5,7 @@ const { mongoProtocol, mongoHost,
 const logger = require('../logger')
 
 exports.mongoConnect = async () => {
-    logger.debug('Executing mongoConnect function')
+    logger.debug('* crawler.mongoose.mongoConnect: Executing mongoConnect function')
     try {
         let uri = ''
         if (mongoProtocol === 'mongodb') {
@@ -20,11 +20,11 @@ exports.mongoConnect = async () => {
             useFindAndModify:false
         })
         console.log(`uri: ${uri}`)
-        logger.info('Connected to mongodb')
+        logger.info('* crawler.mongoose.mongoConnect: Connected to mongodb')
         return { db }
     } catch (e) {
         const error = `${e}`.replace(/Error:/gi, '>')
-        throw new Error(`* mongoConnect: ${error}`)
+        throw new Error(`* crawler.mongoose.mongoConnect: ${error}`)
     }
 }
 
@@ -34,6 +34,6 @@ exports.mongoClose = async (db) => {
         await db.disconnect()
     } catch (e) {
         const error = `${e}`.replace(/Error:/gi, '>')
-        throw new Error(`* mongoClose: ${error}`)
+        throw new Error(`* crawler.mongoose.mongoClose: ${error}`)
     }
 }

@@ -13,7 +13,7 @@ let logger = require('./logger')
 exports.parseDomainsAndStore = 
     async ({ dateRegistered = new Date('1970-01-01'), dateFilename = '' } = {}) => {
     try {
-        logger.debug('Executing crawler/parseDomainsAndStore function')
+        logger.debug('* crawler.parseAndStore.parseDomainsAndStore: starting...')
     
         if (dateFilename === '' || dateRegistered === new Date('1970-01-01')) {
             throw new Error('You cannot omit parameters')
@@ -42,12 +42,12 @@ exports.parseDomainsAndStore =
         }
         const end = process.hrtime.bigint();
         const duration = (end - start)/BigInt(1e9)
-        logger.info(`Process of writing domains to database 
-        took ${BigInt(duration)} seconds`)
-        logger.info('* parseDomainsAndStore: All entries saved')
+        logger.info(`* crawler.parseAndStore.parseDomainsAndStore: Process 
+        of writing domains to database took ${BigInt(duration)} seconds`)
+        logger.info('* crawler.parseAndStore.parseDomainsAndStore: All entries saved')
         return
     } catch (e) {
         const error = `${e}`.replace(/^Error:/gi, '>')
-        throw new Error(`* parseDomainsAndStore: ${error}`)
+        throw new Error(`* crawler.parseAndStore.parseDomainsAndStore: ${error}`)
     }
 }

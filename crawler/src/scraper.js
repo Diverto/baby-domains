@@ -30,7 +30,7 @@ const domainRegisteredDate = ($) => {
         return new Date(dateRegistered)
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
-        throw new Error(`* domainRegisteredDate: ${error}`)
+        throw new Error(`* crawler.scraper.domainRegisteredDate: ${error}`)
     }
     
 }
@@ -43,7 +43,7 @@ const domainRegisteredDate = ($) => {
  */
 const obtainDownloadUrl = ($) => {
     try {
-        logger.debug('Executing obtainDownloadUrl function')
+        logger.debug('* crawler.scraper.obtainDownloadUrl: starting...')
         const downloadUrl = $('table > tbody > tr:nth-child(1) > td:nth-child(4) > a')
             .attr('href')
         if (!validator.isURL(downloadUrl)) {
@@ -52,7 +52,7 @@ const obtainDownloadUrl = ($) => {
         return downloadUrl
     } catch (e) {
         const error = `${e}`.replace(/^Error:/gi, '>')
-        throw new Error(`* obtainDownloadUrl: ${error}`)
+        throw new Error(`* crawler.scraper.obtainDownloadUrl: ${error}`)
     }
 }
 
@@ -90,11 +90,12 @@ const writeDomainsZippedFile = async ({options = {}, dateFilename = ''} = {}) =>
             const writeStream = fs.createWriteStream(writePathZip)
             let req = request.get(options).pipe(writeStream)
             await pEvent(req, 'close')
-            logger.info(`Zipped file written to: ${writePathZip}`)
+            logger.info(`* crawler.scraper.writeDomainsZippedFile: 
+            Zipped file written to: ${writePathZip}`)
             return writePathZip
         } catch (e) {
             const error = `${e}`.replace(/^Error:/, '>')
-            throw new Error(`* writeDomainsZippedFile: ${error}`)
+            throw new Error(`* crawler.scraper.writeDomainsZippedFile: ${error}`)
         }
 }
 
@@ -117,7 +118,7 @@ const getHtml = async (url) => {
         return html
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
-        throw new Error(`* getHtml: ${error}`)
+        throw new Error(`* crawler.scraper.getHtml: ${error}`)
     }
 }
 
@@ -127,16 +128,17 @@ const getHtml = async (url) => {
  */
 const saveHtmlToFile = (html) => {
     try {
-        logger.debug('Crawled html file is being saved to test.html...')
+        logger.debug(`* crawler.scraper.saveHtmlToFile: 
+        Crawled html file is being saved to test.html...`)
         if (!isHtml(html)) {
-            throw new Error('saveHtmlToFile: URL exists but is wrong type')
+            throw new Error('URL exists but is wrong type')
         }
         const writePath = path.join(__dirname, '..', 'testdata','test.html')
         fs.writeFileSync(writePath, html)
-        logger.info(`HTML file written into: ${writePath}`)
+        logger.info(`* crawler.scraper.saveHtmlToFile: HTML file written into: ${writePath}`)
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
-        throw new Error(`* saveHtmlToFile: ${error}`)
+        throw new Error(`* crawler.scraper.saveHtmlToFile: ${error}`)
     }
 }
 
@@ -149,14 +151,15 @@ const saveHtmlToFile = (html) => {
 const convertZipToTxt = (writePathZip = '') => {
     return new Promise((resolve, reject) => {
         if (typeof writePathZip !== 'string') {
-            return reject('* convertZipToTxt: Argument should be string')
+            return reject('* crawler.scraper.convertZipToTxt: Argument should be string')
         }
         const pathRel = path.relative(
             path.join(__dirname, '..', 'data'), writePathZip)
         
         if ((pathRel.split("/").length - 1 > 3) || 
             !path.isAbsolute(writePathZip)) {
-                return reject('* convertZipToTxt: Path is not a valid filesystem path')
+                return reject(`* crawler.scraper.convertZipToTxt: 
+                Path is not a valid filesystem path`)
         }
         
         const fileContents = fs.createReadStream(writePathZip)
@@ -166,7 +169,7 @@ const convertZipToTxt = (writePathZip = '') => {
           .on('close', err => {
             if (err) {
                 const error = `${err}`.replace(/^Error:/, '>')
-                return reject(`* convertZipToTxt: ${error}`)
+                return reject(`* crawler.scraper.convertZipToTxt: ${error}`)
             } else {
                 writePathTemp += 'domain-names.txt'}
                 resolve(writePathTemp)
@@ -174,7 +177,7 @@ const convertZipToTxt = (writePathZip = '') => {
         )
         res.on('error', err => {
             const error = `${err}`.replace(/^Error:/, '>')
-            return reject(`* convertZipToTxt: ${error}`)
+            return reject(`* crawler.scraper.convertZipToTxt: ${error}`)
         })
     })
 }
@@ -186,7 +189,7 @@ const convertZipToTxt = (writePathZip = '') => {
  * @returns {{writePathZip: string, dateRegistered: Date}}
  */
 exports.fetchStoreZippedDomainFile = async () => {
-    logger.debug('Called fetchZippedDomainFile to obtain domains zip file')
+    logger.debug('* crawler.scraper.fetchStoreZippedDomainFile: starting...')
     try {
         const html  = await getHtml('http://whoisds.com/newly-registered-domains')
         saveHtmlToFile(html)
@@ -202,11 +205,13 @@ exports.fetchStoreZippedDomainFile = async () => {
         }
      
         const writePathZip = await writeDomainsZippedFile({ options, dateFilename })
-        logger.info(`writePathZip: ${writePathZip}`)
+        logger.info(`* crawler.scraper.fetchStoreZippedDomainFile: 
+        writePathZip - ${writePathZip}`)
         const zipFileStats = fs.statSync(writePathZip)
         // if file is smaller than 10kB
         if (zipFileStats.size/1000 < 10) {
-            throw new Error('File is probably empty or corrupted!')
+            throw new Error(`* crawler.scraper.fetchStoreZippedDomainFile: 
+            File is probably empty or corrupted!`)
         }
         const writePathTemp = await convertZipToTxt(writePathZip)
         dateFilename += '.txt'
@@ -215,7 +220,7 @@ exports.fetchStoreZippedDomainFile = async () => {
         
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
-        throw new Error(`* crawler/fetchStoreZippedDomainFile: ${error}`)
+        throw new Error(`* crawler.scraper.fetchStoreZippedDomainFile: ${error}`)
     }
 }
 

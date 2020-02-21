@@ -30,12 +30,12 @@ const publishMessage = require('./util').publishMessage
                 await mongoClose(db)
             } catch (e) {
                 const error = `${e}`.replace(/^Error:/, '>')
-                throw new Error(`* crawler/cronjob: ${error}`)
+                throw new Error(`* crawler.index.main: ${error}`)
             }
 
         }, null, true, 'Europe/Vienna');
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
-        logger.error(`* crawler/main: ${error}`)
+        logger.error(`* crawler.index.main: ${error}`)
     }
 }()

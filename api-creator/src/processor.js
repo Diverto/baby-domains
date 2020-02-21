@@ -10,7 +10,7 @@ const BabyDomain = require('./models/babydomains').BabyDomain
 
 const dateToFilename = (dateRegistered = '') => {
     try {
-        logger.debug('Executing api-creator/dateToFilename function')
+        logger.debug('* api-creator.processor.dateToFilename: starting')
         if (Object.prototype.toString.call(dateRegistered) !== '[object Date]') {
             throw new Error('Invalid type')
         }
@@ -21,7 +21,7 @@ const dateToFilename = (dateRegistered = '') => {
         return dateFilename
     } catch (e) {
         const error = `${e}`.replace(/^Error:/, '>')
-        throw new Error(`* api-creator/dateToFilename: ${error}`)
+        throw new Error(`* api-creator.processor.dateToFilename: ${error}`)
     }
 }
 
@@ -30,10 +30,10 @@ const dateToFilename = (dateRegistered = '') => {
  * @param {Date} cleaningDate - upper date for database cleaning
  */ 
 const cleanDb = async(cleaningDate) => {
-    logger.debug(`Removing old data from db from date: ${cleaningDate}`)
+    logger.debug(`* api-creator.processor.cleanDb: Removing old data from db from date: ${cleaningDate}`)
     const cleanedEntries = await BabyDomain.deleteMany({'dateRegistered': 
         {$lte: cleaningDate}})
-    logger.info(`Number of cleaned entries: ${cleanedEntries.deletedCount}`)
+    logger.info(`* api-creator.processor.cleanDb: Number of cleaned entries: ${cleanedEntries.deletedCount}`)
 }
 
 /**
@@ -43,12 +43,13 @@ const cleanDb = async(cleaningDate) => {
  */
 exports.listenMessages = async (channel) => {
     try {
-        logger.debug('* api-creator.processor.listenMessages: Executing api-creator/listenMessages function')
+        logger.debug('* api-creator.processor.listenMessages: starting')
         await channel.prefetch(1);
         channel.consume(`${exchangeName}.${routingKey}`, async (msg) => {
             if (msg != null) {
                 const msgBody = msg.content.toString()
                 const data = JSON.parse(msgBody);
+                logger.debug(`* api-creator.processor.listenMessages: Data status = ${data.status}`)
                 if (data.status === "completed") {
                     const { db } = await mongoConnect()
                     logger.debug(`* api-creator.processor.listenMessages: Processing finished. Registered date: ${data.dateRegistered}`)

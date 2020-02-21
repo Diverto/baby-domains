@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
     try {
         await mongoConnect()
     } catch (e) {
-        console.log(`Couldn't connect to database: ${e}`)
+        console.log(`* server.app.<anonymous>: Couldn't connect to database: ${e}`)
     }
 }()
 

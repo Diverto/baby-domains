@@ -5,7 +5,7 @@ const { mongoProtocol, mongoHost,
 const logger = require('../logger')
 
 exports.mongoConnect = async () => {
-    logger.debug('Executing mongoConnect function')
+    logger.debug('* server.mongoose.mongoConnect: starting...')
     try {
         let uri = ''
         if (mongoProtocol === 'mongodb') {
@@ -19,10 +19,10 @@ exports.mongoConnect = async () => {
             useCreateIndex: true,
             useFindAndModify:false
         })
-        logger.info('Connected to mongodb')
+        logger.info('* server.mongoose.mongoConnect: Connected to mongodb')
         return
     } catch (e) {
         const error = `${e}`.replace(/Error:/gi, '>')
-        throw new Error(`* mongoConnect: ${error}`)
+        throw new Error(`* server.mongoose.mongoConnect: ${error}`)
     }
 }
