@@ -17,6 +17,10 @@ spec:
       labels:
         component: webserver
     spec:
+      securityContext:
+        runAsUser: node
+        runAsGroup: node
+        fsGroup: node
       dnsPolicy: Default
       volumes:
         - name: cb-pv

@@ -26,6 +26,10 @@ spec:
       labels:
         component: api-creator
     spec:
+      securityContext:
+        runAsUser: node
+        runAsGroup: node
+        fsGroup: node
       dnsPolicy: Default
       # volume
       volumes:
