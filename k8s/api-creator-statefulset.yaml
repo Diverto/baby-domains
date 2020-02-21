@@ -26,10 +26,6 @@ spec:
       labels:
         component: api-creator
     spec:
-      securityContext:
-        runAsUser: node
-        runAsGroup: node
-        fsGroup: node
       dnsPolicy: Default
       # volume
       volumes:
@@ -92,4 +88,8 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "200m"
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
 
