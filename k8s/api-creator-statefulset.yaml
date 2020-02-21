@@ -98,7 +98,7 @@ spec:
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
-            - name: cb-pvinit
+            - name: cb-pv
               mountPath: "/app/public"
       securityContext:
         runAsUser: 1000
