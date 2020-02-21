@@ -1,6 +1,6 @@
 FROM node:alpine
 
-RUN mkdir -p /app/node_modules && chown -R node:node /app
+RUN mkdir -p /app/node_modules && mkdir -p /app/coverage &&  chown -R node:node /app
 WORKDIR /app
 
 RUN apk update && apk upgrade
