@@ -14,7 +14,7 @@ const publishMessage = require('./util').publishMessage
 // ESLint-happy IIFE
 !async function main() {
     try {
-        new CronJob('0 18 * * *', async function () {
+        new CronJob('0 19 * * *', async function () {
             try {
                 const { db } = await mongoConnect()
                 const { connection, channel } = await brokerSetup()
