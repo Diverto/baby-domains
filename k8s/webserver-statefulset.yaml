@@ -78,4 +78,15 @@ spec:
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
-        fsGroup: 1000   
+        fsGroup: 1000
+      initContainers:
+        - name: fix-permissions-for-nfs-share
+          image: alpine:latest
+          command:
+            - chown
+            - -R  
+            - 1000:1000
+            - /app/public
+          volumeMounts:
+            - name: cb-pv
+              mountPath: /app/public

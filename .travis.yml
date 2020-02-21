@@ -40,7 +40,7 @@ script:
   
 
   - >
-    docker run -e CI=true -v "$PWD"/coverage:/app/coverage:rw tandrosdiv/baby-crawler:test 
+    docker run -e CI=true --user 1000 -v "$PWD"/coverage:/app/coverage:rw tandrosdiv/baby-crawler:test 
     /bin/bash -c "npm run test:codecov"
   - bash <(curl -s https://codecov.io/env)
   - bash <(curl -s https://codecov.io/bash)
