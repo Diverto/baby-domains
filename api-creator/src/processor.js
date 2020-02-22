@@ -33,7 +33,8 @@ const cleanDb = async(cleaningDate) => {
     logger.debug(`* api-creator.processor.cleanDb: Removing old data from db from date: ${cleaningDate}`)
     const cleanedEntries = await BabyDomain.deleteMany({'dateRegistered': 
         {$lte: cleaningDate}})
-    logger.info(`* api-creator.processor.cleanDb: Number of cleaned entries: ${cleanedEntries.deletedCount}`)
+    // logger.info(`* api-creator.processor.cleanDb: Number of cleaned entries: ${cleanedEntries.deletedCount}`)
+    logger.info(`* api-creator.processor.cleanDb: Cleaning finished`)
 }
 
 /**
