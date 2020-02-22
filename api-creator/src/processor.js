@@ -52,13 +52,14 @@ exports.listenMessages = async (channel) => {
                 logger.debug(`* api-creator.processor.listenMessages: Data status = ${data.status}`)
                 if (data.status === "completed") {
                     const { db } = await mongoConnect()
-                    logger.debug(`* api-creator.processor.listenMessages: Processing finished. Registered date: ${data.dateRegistered}`)
+                    logger.debug(`* api-creator.processor.listenMessages: Processing started. Registered date: ${data.dateRegistered}`)
                     let upperDate = new Date(data.dateRegistered)
                     upperDate.setDate(upperDate.getDate() + 1)
                     const domains = await BabyDomain.find({'dateRegistered': 
-                    {$gte: data.dateRegistered, $lte: upperDate}})
-                    logger.info(`* api-creator.processor.listenMessages: Number of entries for ${data.dateRegistered}: 
-                    ${Object.keys(domains).length}`)
+                    {$gte: data.dateRegistered, $lte: upperDate}}).cursor()
+                    // logger.info(`* api-creator.processor.listenMessages: Number of entries for ${data.dateRegistered}: 
+                    // ${Object.keys(domains).length}`)
+                    logger.debug(`* api-creator.processor.listenMessages: DB entries started consuming`)
                     let cb_json = {
                         feedinfo: {
                             name: 'babydomains',
@@ -85,7 +86,7 @@ exports.listenMessages = async (channel) => {
                     const removeDomainsDateString = `${removeDomainsDate.getFullYear()}-` +
                     `${('0' + (removeDomainsDate.getMonth() + 1)).slice(-2)}-` +
                     `${('0' + removeDomainsDate.getDate()).slice(-2)}`
-                    for(let domain of domains) {
+                    domains.on('data', (domain) => {
                         let report = {
                             timestamp: curr_time,
                             id: `BABY-${domain.domainName}-${regDateString}`,
@@ -100,7 +101,9 @@ exports.listenMessages = async (channel) => {
                             }
                         }
                         cb_json.reports.push(report)
-                    }
+                    }).on('end', () => {
+                        logger.debug(`* api-creator.processor.listenMessages: DB entries finished consuming`)
+                    })
                     let json_cb_feed = JSON.stringify(cb_json) 
                     await fsPromises.writeFile(dateToFilename(registeredDate) + '.json', json_cb_feed)
                     if (fs.existsSync(dateToFilename(removeDomainsDate) + '.json')) {
