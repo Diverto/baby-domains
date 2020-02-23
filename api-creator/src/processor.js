@@ -56,8 +56,6 @@ exports.listenMessages = async (channel) => {
                     logger.debug(`* api-creator.processor.listenMessages: Processing started. Registered date: ${data.dateRegistered}`)
                     let upperDate = new Date(data.dateRegistered)
                     upperDate.setDate(upperDate.getDate() + 1)
-                    const domains = await BabyDomain.find({'dateRegistered': 
-                    {$gte: data.dateRegistered, $lte: upperDate}}).cursor()
                     // logger.info(`* api-creator.processor.listenMessages: Number of entries for ${data.dateRegistered}: 
                     // ${Object.keys(domains).length}`)
                     logger.debug(`* api-creator.processor.listenMessages: DB entries started consuming`)
@@ -87,6 +85,8 @@ exports.listenMessages = async (channel) => {
                     const removeDomainsDateString = `${removeDomainsDate.getFullYear()}-` +
                     `${('0' + (removeDomainsDate.getMonth() + 1)).slice(-2)}-` +
                     `${('0' + removeDomainsDate.getDate()).slice(-2)}`
+                    const domains = await BabyDomain.find({'dateRegistered': 
+                    {$gte: data.dateRegistered, $lte: upperDate}}).cursor()
                     domains.on('data', (domain) => {
                         let report = {
                             timestamp: curr_time,
@@ -129,7 +129,7 @@ exports.listenMessages = async (channel) => {
                     // Object.entries(domains).forEach(([key, value]) => {
                     //     console.log(`${key}: ${value}`);
                     // }) 
-                    await mongoClose(db)
+                    // await mongoClose(db)
                     
                 }
             }
