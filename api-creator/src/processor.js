@@ -85,26 +85,29 @@ exports.listenMessages = async (channel) => {
                     const removeDomainsDateString = `${removeDomainsDate.getFullYear()}-` +
                     `${('0' + (removeDomainsDate.getMonth() + 1)).slice(-2)}-` +
                     `${('0' + removeDomainsDate.getDate()).slice(-2)}`
-                    const domains = await BabyDomain.find({'dateRegistered': 
-                    {$gte: data.dateRegistered, $lte: upperDate}}).cursor()
-                    domains.on('data', (domain) => {
-                        let report = {
-                            timestamp: curr_time,
-                            id: `BABY-${domain.domainName}-${regDateString}`,
-                            title: `New domain ${domain.domainName} ` +
-                            `registered on ${regDateString}`,
-                            link: 'http://whoisds.com/newly-registered-domains',
-                            score: 30,
-                            iocs: {
-                                dns: [
-                                    domain.domainName
-                                ]
+                    BabyDomain.
+                        find({'dateRegistered': 
+                            {$gte: data.dateRegistered, $lte: upperDate}}).
+                        cursor().
+                        on('data', (domain) => {
+                            let report = {
+                                timestamp: curr_time,
+                                id: `BABY-${domain.domainName}-${regDateString}`,
+                                title: `New domain ${domain.domainName} ` +
+                                `registered on ${regDateString}`,
+                                link: 'http://whoisds.com/newly-registered-domains',
+                                score: 30,
+                                iocs: {
+                                    dns: [
+                                        domain.domainName
+                                    ]
+                                }
                             }
-                        }
-                        cb_json.reports.push(report)
-                    }).on('end', () => {
-                        logger.debug(`* api-creator.processor.listenMessages: DB entries finished consuming`)
-                    })
+                            cb_json.reports.push(report)
+                        }).
+                        on('end', () => {
+                            logger.debug(`* api-creator.processor.listenMessages: DB entries finished consuming`)
+                        })
                     let json_cb_feed = JSON.stringify(cb_json) 
                     await fsPromises.writeFile(dateToFilename(registeredDate) + '.json', json_cb_feed)
                     if (fs.existsSync(dateToFilename(removeDomainsDate) + '.json')) {
