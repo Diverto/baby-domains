@@ -56,7 +56,7 @@
     "rewire": "^4.0.1",
     "snyk": "^1.294.0",
     "unzipper": "^0.10.8",
-    "validator": "^12.2.0",
+    "validator": "^13.0.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
