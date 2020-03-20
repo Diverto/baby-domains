@@ -41,7 +41,7 @@
     "cron": "^1.8.2",
     "mongoose": "^5.9.1",
     "snyk": "^1.294.0",
-    "validator": "^12.2.0",
+    "validator": "^13.0.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
