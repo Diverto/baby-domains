@@ -36,12 +36,12 @@
   "author": "Tomislav Andros",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@google-cloud/logging-winston": "^3.0.5",
+    "@google-cloud/logging-winston": "^3.0.6",
     "amqplib": "^0.5.5",
     "cron": "^1.8.2",
-    "mongoose": "^5.9.1",
-    "snyk": "^1.294.0",
-    "validator": "^12.2.0",
+    "mongoose": "^5.9.7",
+    "snyk": "^1.305.0",
+    "validator": "^13.0.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
@@ -49,8 +49,8 @@
     "env-cmd": "^10.1.0",
     "eslint": "^6.8.0",
     "husky": "^4.2.3",
-    "jest": "^25.1.0",
-    "lint-staged": "^10.0.7",
+    "jest": "^25.2.7",
+    "lint-staged": "^10.1.2",
     "nodemon": "^2.0.2"
   },
   "snyk": true
