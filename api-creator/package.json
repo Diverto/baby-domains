@@ -39,7 +39,7 @@
     "@google-cloud/logging-winston": "^3.0.6",
     "amqplib": "^0.5.5",
     "cron": "^1.8.2",
-    "mongoose": "^5.9.7",
+    "mongoose": "^5.9.14",
     "snyk": "^1.305.0",
     "validator": "^13.0.0",
     "winston": "^3.2.1"
