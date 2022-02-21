@@ -43,7 +43,7 @@
     "@google-cloud/logging-winston": "^3.0.6",
     "acorn": "^7.1.1",
     "ajv": "^6.12.0",
-    "amqplib": "^0.5.5",
+    "amqplib": "^0.7.1",
     "cheerio": "^1.0.0-rc.3",
     "cron": "^1.8.2",
     "env-cmd": "^10.1.0",
