@@ -59,7 +59,7 @@
     "mongoose": "^5.9.7",
     "snyk": "^1.305.0",
     "validator": "^13.0.0",
-    "winston": "^3.2.1"
+    "winston": "^3.3.0"
   },
   "snyk": true
 }
