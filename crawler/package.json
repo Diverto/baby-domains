@@ -57,7 +57,7 @@
     "snyk": "^1.305.0",
     "unzipper": "^0.10.10",
     "validator": "^13.0.0",
-    "winston": "^3.2.1"
+    "winston": "^3.3.0"
   },
   "devDependencies": {
     "codecov": "^3.6.5",
