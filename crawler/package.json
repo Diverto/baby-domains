@@ -40,7 +40,7 @@
   "author": "Tomislav Andros",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@google-cloud/logging-winston": "^3.0.6",
+    "@google-cloud/logging-winston": "^4.0.0",
     "acorn": "^7.1.1",
     "ajv": "^6.12.0",
     "amqplib": "^0.5.5",
@@ -53,8 +53,8 @@
     "p-event": "^4.1.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
-    "rewire": "^5.0.0",
-    "snyk": "^1.305.0",
+    "rewire": "^6.0.0",
+    "snyk": "^1.685.0",
     "unzipper": "^0.10.10",
     "validator": "^13.0.0",
     "winston": "^3.2.1"
